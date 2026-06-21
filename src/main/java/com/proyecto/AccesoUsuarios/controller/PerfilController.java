@@ -24,38 +24,27 @@ public class PerfilController {
     @GetMapping
     public String verPerfil(Authentication auth, Model model) {
         String username = auth.getName();
-        // Buscamos al usuario logueado usando el método que ya tienes en el repo/service
-        // Nota: Si tu servicio no tiene 'buscarPorUsername', usa el repo o crea el método en el service.
-        // Asumo que en tu service puedes llamar al repo.findByUserName
-        // Aquí usaremos una lógica genérica asumiendo que tienes acceso al repo o service.
-        
-        // TRUCO: Como en tu service tienes 'filtrarUsuarios' pero no un 'buscarPorUsername' explícito público,
-        // vamos a usar el filtro para encontrarlo rápido (o idealmente agrega findByUsername en tu service).
-        Usuario usuario = usuarioService.filtrarUsuarios(username, null).get(0);
-
+        Usuario usuario = usuarioService.findByUserName(username);
         model.addAttribute("usuario", usuario);
-        return "perfil"; // La vista que crearemos abajo
+        return "perfil";
     }
 
     // 2. Procesar la actualización
     @PostMapping("/actualizar")
     public String actualizarPerfil(@ModelAttribute Usuario usuarioForm, Authentication auth, RedirectAttributes redirectAttrs) {
-        String username = auth.getName();
-        
-        // IMPORTANTE: Buscamos el usuario REAL de la base de datos
-        Usuario usuarioActual = usuarioService.filtrarUsuarios(username, null).get(0);
+        try {
+            String username = auth.getName();
+            Usuario usuarioActual = usuarioService.findByUserName(username);
 
-        // Solo actualizamos los campos permitidos
-        usuarioActual.setEmail(usuarioForm.getEmail());
-        usuarioActual.setTelefono(usuarioForm.getTelefono());
-        usuarioActual.setCedula(usuarioForm.getCedula());
+            usuarioActual.setEmail(usuarioForm.getEmail());
+            usuarioActual.setTelefono(usuarioForm.getTelefono());
+            usuarioActual.setCedula(usuarioForm.getCedula());
 
-        // Guardamos los cambios
-        usuarioService.save(usuarioActual);
-
-        // Mensaje flash para que aparezca en el home
-        redirectAttrs.addFlashAttribute("mensaje", "¡Perfil actualizado con éxito!");
-
-        return "redirect:/home"; // O return "redirect:/perfil?exito";
+            usuarioService.save(usuarioActual);
+            redirectAttrs.addFlashAttribute("mensaje", "Perfil actualizado con exito!");
+        } catch (Exception e) {
+            redirectAttrs.addFlashAttribute("error", "Error al guardar: " + e.getMessage());
+        }
+        return "redirect:/perfil";
     }
 }

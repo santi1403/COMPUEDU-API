@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import com.lowagie.text.DocumentException;
 import com.proyecto.AccesoUsuarios.Utils.ReporteGlobalExporterPDF;
+import com.proyecto.AccesoUsuarios.model.Convocatoria;
 import com.proyecto.AccesoUsuarios.model.Inscripcion;
 import com.proyecto.AccesoUsuarios.model.Notificacion;
 import com.proyecto.AccesoUsuarios.model.Usuario;
@@ -97,8 +98,17 @@ public class DashboardController {
             model.addAttribute("totalMisInscripciones", inscripcionRepo.findByUsuario(usuario).size());
             model.addAttribute("misAceptadas", inscripcionRepo.findByUsuario(usuario).stream().filter(i -> "ACEPTADA".equals(i.getEstado())).count());
             model.addAttribute("misRechazadas", inscripcionRepo.findByUsuario(usuario).stream().filter(i -> "RECHAZADA".equals(i.getEstado())).count());
-            model.addAttribute("convocatoriasDisponibles", convocatoriaRepo.findByEstado("APROBADA"));
-            model.addAttribute("convocatoriasDestacadas", convocatoriaRepo.findTop3ByEstadoOrderByIdDesc("APROBADA"));
+
+            List<Convocatoria> disponibles = new ArrayList<>();
+            List<Convocatoria> destacadas = new ArrayList<>();
+            try {
+                disponibles = convocatoriaRepo.findByEstado("APROBADA");
+                destacadas = convocatoriaRepo.findTop3ByEstadoOrderByIdDesc("APROBADA");
+            } catch (Exception e) {
+                System.err.println("Error cargando convocatorias: " + e.getMessage());
+            }
+            model.addAttribute("convocatoriasDisponibles", disponibles != null ? disponibles : new ArrayList<>());
+            model.addAttribute("convocatoriasDestacadas", destacadas != null ? destacadas : new ArrayList<>());
             model.addAttribute("nombreUsuario", usuario.getUserName());
 
             // Redirige al archivo: src/main/resources/templates/home.html

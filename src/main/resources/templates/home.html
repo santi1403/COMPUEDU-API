@@ -250,11 +250,11 @@
         </div>
         <div class="widget-card">
             <div class="widget-label">Ofertas Nuevas</div>
-            <div class="widget-value" th:text="${convocatoriasDisponibles.size()}">0</div>
+            <div class="widget-value" th:text="${convocatoriasDisponibles != null ? convocatoriasDisponibles.size() : 0}">0</div>
         </div>
     </div>
 
-    <div class="destacadas-grid" th:if="${!convocatoriasDestacadas.empty}">
+    <div class="destacadas-grid" th:if="${convocatoriasDestacadas != null and !convocatoriasDestacadas.empty}">
         <div class="destacada-card" th:each="conv : ${convocatoriasDestacadas}">
             <div class="destacada-header">
                 <div class="destacada-icon" th:style="${'background:' + (conv.categoria == 'Beca' ? 'linear-gradient(135deg,#059669,#047857)' : (conv.categoria == 'Curso' ? 'linear-gradient(135deg,#2563eb,#1d4ed8)' : 'linear-gradient(135deg,#d97706,#b45309)'))}">

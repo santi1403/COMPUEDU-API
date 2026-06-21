@@ -66,6 +66,10 @@ public class UsuarioService {
         return repo.existsByUserName(userName);
     }
 
+    public Usuario findByUserName(String userName) {
+        return repo.findByUserName(userName).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+    }
+
     public boolean existsByEmail(String email) {
         return repo.existsByEmail(email);
     }
