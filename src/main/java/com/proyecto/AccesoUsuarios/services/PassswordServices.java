@@ -3,6 +3,7 @@ package com.proyecto.AccesoUsuarios.services;
 import com.proyecto.AccesoUsuarios.model.Usuario;
 import com.proyecto.AccesoUsuarios.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -32,6 +33,9 @@ public class PassswordServices {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Value("${python.api.url:http://localhost:5000}")
+    private String pythonApiBaseUrl;
+
     public void solicitarRestablecimiento(String email) {
         // 1. Buscar al usuario por email (toma el primero si hay duplicados)
         Optional<Usuario> usuarioOpt = usuarioRepository.findFirstByEmail(email);
@@ -53,7 +57,7 @@ public class PassswordServices {
             datosParaPython.put("email", email);
             datosParaPython.put("link", linkDeRecuperacion);
 
-            String pythonApiUrl = "http://localhost:5000/api/enviar-enlace";
+            String pythonApiUrl = pythonApiBaseUrl + "/api/enviar-enlace";
 
             try {
                 HttpHeaders headers = new HttpHeaders();
