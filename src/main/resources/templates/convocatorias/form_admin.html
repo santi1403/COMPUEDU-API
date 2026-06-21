@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Nueva Convocatoria | PortalEdu</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #059669;
+            --primary-dark: #047857;
+            --accent: #d97706;
+            --text: #1f2937;
+            --text-muted: #6b7280;
+            --bg: #f8fafc;
+            --border: #e5e7eb;
+            --white: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* ========== NAVBAR ========== */
+        .navbar {
+            background: var(--white);
+            border-bottom: 1px solid rgba(0,0,0,0.04);
+            padding: 0.9rem 0;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.15rem;
+            color: var(--text) !important;
+            letter-spacing: -0.3px;
+            text-decoration: none;
+        }
+
+        .navbar-brand i {
+            color: var(--primary);
+            font-size: 1.3rem;
+        }
+
+        .brand-accent { color: var(--primary); font-weight: 800; }
+
+        .btn-nav-back {
+            font-weight: 500;
+            font-size: 0.82rem;
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            color: var(--text-muted);
+            background: transparent;
+            border: 1.5px solid var(--border);
+            transition: all 0.25s ease;
+            letter-spacing: 0.2px;
+            cursor: pointer;
+        }
+
+        .btn-nav-back:hover {
+            color: var(--primary);
+            border-color: var(--primary);
+            background: rgba(5,150,105,0.04);
+        }
+
+        .btn-nav-logout {
+            font-weight: 500;
+            font-size: 0.82rem;
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            color: #dc2626;
+            background: transparent;
+            border: 1.5px solid var(--border);
+            transition: all 0.25s ease;
+            cursor: pointer;
+        }
+
+        .btn-nav-logout:hover {
+            background: #dc2626;
+            color: white;
+            border-color: #dc2626;
+            box-shadow: 0 4px 14px rgba(220,38,38,0.2);
+        }
+
+        /* ========== CONTENEDOR PRINCIPAL ========== */
+        .main-container {
+            padding: 2rem 1rem 4rem;
+        }
+
+        /* ========== TARJETA DEL FORMULARIO ========== */
+        .form-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+            max-width: 780px;
+            margin: 0 auto;
+        }
+
+        .form-card-header {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            color: white;
+            padding: 2rem 2.5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-card-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 300px;
+            height: 300px;
+            background: rgba(255,255,255,0.04);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .form-card-header::after {
+            content: '';
+            position: absolute;
+            bottom: -40%;
+            left: -10%;
+            width: 200px;
+            height: 200px;
+            background: rgba(255,255,255,0.04);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .form-card-header .icon-circle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 64px;
+            height: 64px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 50%;
+            margin-bottom: 0.8rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .form-card-header .icon-circle i {
+            font-size: 1.6rem;
+        }
+
+        .form-card-header h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .form-card-header p {
+            font-size: 0.88rem;
+            opacity: 0.8;
+            margin: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .form-card-body {
+            padding: 2.2rem 2.5rem;
+        }
+
+        /* ========== CAMPOS ========== */
+        .field-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .field-label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.45rem;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper .input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .input-wrapper textarea ~ .input-icon {
+            top: 1rem;
+            transform: none;
+        }
+
+        .input-modern {
+            width: 100%;
+            padding: 0.8rem 1rem 0.8rem 2.7rem;
+            border: 2px solid var(--border);
+            border-radius: 13px;
+            background: #f9fafb;
+            font-size: 0.9rem;
+            font-family: 'Poppins', sans-serif;
+            color: var(--text);
+            transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+            outline: none;
+        }
+
+        .input-modern:hover {
+            border-color: #d1d5db;
+            background: var(--white);
+        }
+
+        .input-modern:focus {
+            border-color: var(--primary);
+            background: var(--white);
+            box-shadow: 0 0 0 5px rgba(5,150,105,0.06);
+        }
+
+        .input-wrapper:focus-within .input-icon {
+            color: var(--primary);
+        }
+
+        .input-modern::placeholder {
+            color: #c4c4c4;
+            font-weight: 400;
+        }
+
+        textarea.input-modern {
+            resize: vertical;
+            min-height: 120px;
+            line-height: 1.6;
+        }
+
+        /* Select personalizado */
+        select.input-modern {
+            appearance: none;
+            -webkit-appearance: none;
+            padding-right: 2.8rem;
+            cursor: pointer;
+            background-image: none;
+        }
+
+        .select-arrow {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+            font-size: 0.7rem;
+            pointer-events: none;
+            transition: color 0.3s ease;
+        }
+
+        .input-wrapper:focus-within .select-arrow {
+            color: var(--primary);
+        }
+
+        .field-hint {
+            font-size: 0.78rem;
+            color: #9ca3af;
+            margin-top: 0.4rem;
+        }
+
+        /* ========== ROW PARA FECHAS ========== */
+        .date-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.2rem;
+        }
+
+        .date-start-icon { color: var(--primary); }
+        .date-end-icon { color: #dc2626; }
+
+        /* ========== BOTONES ========== */
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.8rem;
+            margin-top: 2.2rem;
+        }
+
+        .btn-cancel {
+            padding: 0.75rem 2rem;
+            border-radius: 50px;
+            font-weight: 500;
+            font-size: 0.88rem;
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-muted);
+            background: var(--white);
+            border: 1.5px solid var(--border);
+            text-decoration: none;
+            transition: all 0.25s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .btn-cancel:hover {
+            color: var(--text);
+            border-color: #d1d5db;
+            background: #f9fafb;
+        }
+
+        .btn-submit {
+            padding: 0.75rem 2.2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.88rem;
+            font-family: 'Poppins', sans-serif;
+            color: white;
+            background: linear-gradient(135deg, #059669, #047857);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 0.2px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(5,150,105,0.35);
+        }
+
+        .btn-submit:active {
+            transform: scale(0.96);
+        }
+
+        .btn-submit::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(120deg, transparent, rgba(255,255,255,0.12), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .btn-submit:hover::after {
+            transform: translateX(100%);
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            .form-card-body {
+                padding: 1.5rem 1.2rem;
+            }
+            .form-card-header {
+                padding: 1.5rem 1.2rem;
+            }
+            .form-card-header h3 { font-size: 1.2rem; }
+            .date-row {
+                grid-template-columns: 1fr;
+            }
+            .form-actions {
+                flex-direction: column;
+            }
+            .form-actions .btn-cancel,
+            .form-actions .btn-submit {
+                justify-content: center;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand sticky-top">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="#">
+            <i class="fas fa-shield-alt me-2"></i>
+            Admin<span class="brand-accent">Panel</span>
+        </a>
+        <div class="d-flex align-items-center gap-2">
+            <a th:href="@{/dashboard}" class="btn-nav-back">
+                <i class="fas fa-times me-1"></i> Cancelar y Salir
+            </a>
+            <form th:action="@{/logout}" method="post" class="mb-0">
+                <button class="btn-nav-logout">
+                    <i class="fas fa-power-off"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="main-container">
+
+    <div class="form-card">
+
+        <div class="form-card-header">
+            <div class="icon-circle">
+                <i class="fas fa-bullhorn"></i>
+            </div>
+            <h3>Nueva Convocatoria</h3>
+            <p>Ingresa los detalles para publicar una nueva oportunidad.</p>
+        </div>
+
+        <div class="form-card-body">
+
+            <form th:action="@{/convocatorias/guardar}" th:object="${convocatoria}" method="post">
+
+                <div class="field-group">
+                    <label class="field-label">Titulo de la Convocatoria</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-heading input-icon"></i>
+                        <input type="text" th:field="*{titulo}" class="input-modern" placeholder="Ej: Beca de Excelencia 2025" required>
+                    </div>
+                </div>
+
+                <div class="field-group">
+                    <label class="field-label">Descripcion Detallada</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-align-left input-icon"></i>
+                        <textarea th:field="*{descripcion}" class="input-modern" rows="4" placeholder="Describe los requisitos y beneficios..." required></textarea>
+                    </div>
+                </div>
+
+                <div class="date-row">
+                    <div class="field-group">
+                        <label class="field-label">Fecha de Inicio</label>
+                        <div class="input-wrapper">
+                            <i class="far fa-calendar-check input-icon date-start-icon"></i>
+                            <input type="date" th:field="*{fechaInicio}" class="input-modern" required>
+                        </div>
+                    </div>
+                    <div class="field-group">
+                        <label class="field-label">Fecha de Cierre</label>
+                        <div class="input-wrapper">
+                            <i class="far fa-calendar-times input-icon date-end-icon"></i>
+                            <input type="date" th:field="*{fechaFin}" class="input-modern" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="date-row">
+                    <div class="field-group">
+                        <label class="field-label">Apoyo Financiero</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-hand-holding-usd input-icon"></i>
+                            <select th:field="*{tipoApoyo}" class="input-modern">
+                                <option value="">Sin especificar</option>
+                                <option value="Beca Completa (100%)">Beca Completa (100%)</option>
+                                <option value="Beca Parcial (50%)">Beca Parcial (50%)</option>
+                                <option value="Auxilio de Transporte">Auxilio de Transporte</option>
+                            </select>
+                            <i class="fas fa-chevron-down select-arrow"></i>
+                        </div>
+                    </div>
+                    <div class="field-group">
+                        <label class="field-label">Precio del Semestre</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-dollar-sign input-icon"></i>
+                            <input type="text" th:field="*{precioSemestre}" class="input-modern" placeholder="Ej: $4.500.000 COP">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field-group">
+                    <label class="field-label">Tipo de Oportunidad</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-tag input-icon"></i>
+                        <select name="categoria" class="input-modern" required>
+                            <option value="Beca">Beca</option>
+                            <option value="Curso">Curso</option>
+                            <option value="Pasantia">Pasantia</option>
+                        </select>
+                        <i class="fas fa-chevron-down select-arrow"></i>
+                    </div>
+                    <div class="field-hint">Esto ayudara a que los estudiantes con alertas activas reciban la notificacion.</div>
+                </div>
+
+                <div class="form-actions">
+                    <a th:href="@{/dashboard}" class="btn-cancel">
+                        <i class="fas fa-times"></i> Cancelar
+                    </a>
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-paper-plane"></i> Publicar Convocatoria
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

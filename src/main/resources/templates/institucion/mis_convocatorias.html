@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Mis Convocatorias | PortalEdu</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #059669; --primary-dark: #047857; --accent: #d97706;
+            --danger: #dc2626; --text: #1f2937; --text-muted: #6b7280;
+            --bg: #f8fafc; --border: #e5e7eb; --white: #ffffff;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Poppins',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+
+        .navbar { background:var(--white); border-bottom:1px solid rgba(0,0,0,0.04); padding:0.9rem 0; }
+        .navbar-brand { font-weight:700; font-size:1.15rem; color:var(--text)!important; letter-spacing:-0.3px; text-decoration:none; }
+        .navbar-brand i { color:var(--primary); font-size:1.3rem; }
+        .brand-accent { color:var(--primary); font-weight:800; }
+
+        .btn-nav-back { font-weight:500; font-size:0.82rem; padding:0.5rem 1.2rem; border-radius:50px; color:var(--text-muted); background:transparent; border:1.5px solid var(--border); transition:all 0.25s; cursor:pointer; }
+        .btn-nav-back:hover { color:var(--primary); border-color:var(--primary); background:rgba(5,150,105,0.04); }
+
+        .main-container { padding:1.8rem 1rem 4rem; }
+
+        .page-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1.8rem; flex-wrap:wrap; gap:1rem; }
+        .page-header h2 { font-size:1.7rem; font-weight:700; color:var(--text); letter-spacing:-0.4px; margin-bottom:0.2rem; }
+        .page-header p { color:var(--text-muted); font-size:0.9rem; margin:0; }
+
+        .btn-pill-primary { display:inline-flex; align-items:center; gap:0.4rem; padding:0.7rem 1.8rem; border-radius:50px; background:linear-gradient(135deg,#059669,#047857); color:white; font-weight:600; font-size:0.88rem; text-decoration:none; transition:all 0.3s; box-shadow:0 6px 20px rgba(5,150,105,0.25); white-space:nowrap; }
+        .btn-pill-primary:hover { transform:translateY(-2px); box-shadow:0 10px 28px rgba(5,150,105,0.4); color:white; }
+
+        .card-conv { background:var(--white); border:1px solid var(--border); border-radius:18px; overflow:hidden; transition:all 0.3s cubic-bezier(0.4,0,0.2,1); box-shadow:0 2px 15px rgba(0,0,0,0.03); height:100%; display:flex; flex-direction:column; position:relative; }
+        .card-conv:hover { transform:translateY(-6px); box-shadow:0 18px 40px rgba(5,150,105,0.08); border-color:rgba(5,150,105,0.18); }
+        .card-conv::before { content:''; position:absolute; left:0; top:0; bottom:0; width:5px; background:var(--primary); border-radius:0 4px 4px 0; }
+        .card-conv.anulada::before { background:var(--danger); }
+        .card-conv.inactiva::before { background:#9ca3af; }
+
+        .card-conv-body { padding:1.3rem 1.5rem 1rem; flex:1; }
+
+        .badge-cat { display:inline-flex; align-items:center; gap:0.3rem; padding:0.28rem 0.75rem; border-radius:8px; font-size:0.72rem; font-weight:600; background:rgba(5,150,105,0.06); color:var(--primary); border:1px solid rgba(5,150,105,0.1); margin-bottom:0.7rem; }
+
+        .conv-title { font-weight:700; font-size:0.95rem; color:var(--text); margin-bottom:0.4rem; line-height:1.3; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+        .conv-desc { font-size:0.8rem; color:var(--text-muted); margin-bottom:1rem; line-height:1.5; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+
+        .date-row { display:flex; align-items:center; gap:0.5rem; font-size:0.78rem; color:var(--text-muted); margin-bottom:0.8rem; }
+        .date-row i { font-size:0.7rem; }
+        .date-row .icon-start { color:var(--primary); }
+        .date-row .icon-end { color:var(--danger); }
+
+        .badge-status { display:inline-flex; align-items:center; gap:0.3rem; padding:0.3rem 0.8rem; border-radius:50px; font-size:0.72rem; font-weight:600; }
+        .badge-active { background:rgba(5,150,105,0.08); color:#059669; border:1px solid rgba(5,150,105,0.15); }
+        .badge-inactive { background:rgba(107,114,128,0.08); color:#6b7280; border:1px solid rgba(107,114,128,0.12); }
+        .badge-anulada { background:rgba(220,38,38,0.06); color:#dc2626; border:1px solid rgba(220,38,38,0.12); }
+
+        .card-conv-footer { padding:0.8rem 1.5rem 1.2rem; display:flex; justify-content:space-between; align-items:center; gap:0.5rem; border-top:1px solid #f3f4f6; }
+
+        .btn-toggle { display:inline-flex; align-items:center; gap:0.3rem; font-size:0.78rem; font-weight:600; padding:0.35rem 0.8rem; border-radius:50px; border:none; cursor:pointer; transition:all 0.25s; background:transparent; text-decoration:none; }
+        .btn-toggle.off { color:var(--danger); }
+        .btn-toggle.off:hover { background:rgba(220,38,38,0.06); }
+        .btn-toggle.on { color:var(--primary); }
+        .btn-toggle.on:hover { background:rgba(5,150,105,0.06); }
+        .btn-toggle i { font-size:1.1rem; }
+
+        .btn-detail { display:inline-flex; align-items:center; gap:0.3rem; padding:0.4rem 1rem; border-radius:50px; font-size:0.76rem; font-weight:500; color:var(--text-muted); background:transparent; border:1.5px solid var(--border); cursor:pointer; transition:all 0.25s; text-decoration:none; }
+        .btn-detail:hover { color:var(--primary); border-color:var(--primary); background:rgba(5,150,105,0.03); }
+
+        .blocked-text { font-size:0.78rem; color:var(--text-muted); font-style:italic; }
+
+        .modal-content { border-radius:18px; border:1px solid var(--border); box-shadow:0 25px 60px rgba(0,0,0,0.12); }
+        .modal-header { background:#f9fafb; border-bottom:1px solid var(--border); padding:1.1rem 1.5rem; }
+        .modal-header h5 { font-weight:700; color:var(--text); }
+        .modal-body { padding:1.5rem; }
+        .modal-footer { border-top:1px solid var(--border); padding:1rem 1.5rem; }
+        .modal-label { font-size:0.75rem; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-muted); margin-bottom:0.3rem; }
+        .modal-desc { color:var(--text-muted); line-height:1.6; white-space:pre-line; }
+        .modal-state-box { background:#f9fafb; border:1px solid var(--border); border-radius:12px; padding:1rem 1.2rem; margin-top:0.8rem; }
+
+        .btn-modal-close { padding:0.55rem 1.5rem; border-radius:50px; font-weight:500; font-size:0.82rem; border:1.5px solid var(--border); background:var(--white); color:var(--text-muted); cursor:pointer; transition:all 0.25s; }
+        .btn-modal-close:hover { color:var(--text); border-color:#d1d5db; }
+
+        .empty-state { text-align:center; padding:5rem 2rem; }
+        .empty-state i { color:#d1d5db; font-size:4rem; margin-bottom:1rem; }
+        .empty-state h5 { font-weight:700; color:var(--text); margin-bottom:0.3rem; }
+        .empty-state p { color:var(--text-muted); font-size:0.9rem; }
+
+        @media (max-width:768px) {
+            .card-conv-body { padding:1rem 1.2rem 0.8rem; }
+            .card-conv-footer { padding:0.6rem 1.2rem 1rem; flex-wrap:wrap; }
+            .page-header { flex-direction:column; }
+            .page-header h2 { font-size:1.35rem; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand sticky-top">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="#">
+            <i class="fas fa-university me-2"></i>
+            Portal<span class="brand-accent">Aliados</span>
+        </a>
+        <div class="d-flex align-items-center gap-3">
+            <a th:href="@{/dashboard}" class="btn-nav-back">
+                <i class="fas fa-arrow-left me-1"></i> Volver al Panel
+            </a>
+            <span class="text-muted d-none d-md-inline" style="font-size:0.84rem;">
+                Hola, <b th:text="${nombreUsuario}" style="color:var(--text);">Institucion</b>
+            </span>
+        </div>
+    </div>
+</nav>
+
+<div class="container main-container">
+
+    <div class="page-header">
+        <div>
+            <h2>Mis Convocatorias Publicadas</h2>
+            <p>Gestiona las ofertas academicas que has publicado.</p>
+        </div>
+        <a th:href="@{/convocatorias/nueva}" class="btn-pill-primary">
+            <i class="fas fa-plus"></i> Crear Nueva
+        </a>
+    </div>
+
+    <div th:if="${convocatorias.empty}" class="empty-state">
+        <i class="fas fa-file-invoice"></i>
+        <h5>Aun no has publicado nada</h5>
+        <p>Crea tu primera convocatoria para empezar a recibir estudiantes.</p>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-6 col-lg-4" th:each="conv : ${convocatorias}">
+            <div class="card-conv" th:classappend="${conv.estado == 'ANULADA'} ? 'anulada' : (${conv.estado == 'INACTIVA'} ? 'inactiva' : '')">
+
+                <div class="card-conv-body">
+                    <span class="badge-cat" th:text="${conv.categoria}">Beca</span>
+                    <div class="conv-title" th:text="${conv.titulo}">Beca Excelencia</div>
+                    <div class="conv-desc" th:text="${conv.descripcion}">Descripcion corta de la convocatoria...</div>
+
+                    <div class="date-row">
+                        <i class="far fa-calendar-check icon-start"></i>
+                        <span th:text="${#temporals.format(conv.fechaInicio, 'dd MMM')}">01 Ene</span>
+                        <span style="color:#ccc;">-</span>
+                        <i class="far fa-calendar-times icon-end"></i>
+                        <span th:text="${#temporals.format(conv.fechaFin, 'dd MMM yyyy')}">30 Ene 2025</span>
+                    </div>
+
+                    <div th:if="${conv.tipoApoyo != null and !conv.tipoApoyo.isEmpty()}" style="margin-bottom:0.5rem;">
+                        <span th:if="${conv.tipoApoyo == 'Beca Completa (100%)'}" class="badge-cat" style="background:rgba(5,150,105,0.06);color:#059669;border-color:rgba(5,150,105,0.1);">
+                            <i class="fas fa-gem"></i> Beca Completa (100%)
+                        </span>
+                        <span th:if="${conv.tipoApoyo == 'Beca Parcial (50%)'}" class="badge-cat" style="background:rgba(37,99,235,0.06);color:#2563eb;border-color:rgba(37,99,235,0.1);">
+                            <i class="fas fa-chart-bar"></i> Beca Parcial (50%)
+                        </span>
+                    </div>
+                    <div th:if="${conv.precioSemestre != null and !conv.precioSemestre.isEmpty()}" style="font-size:0.76rem;color:var(--text-muted);margin-bottom:0.4rem;">
+                        <i class="fas fa-tag me-1"></i> <span th:text="${conv.precioSemestre}"></span> / semestre
+                    </div>
+
+                    <span th:if="${conv.estado == 'ACTIVA'}" class="badge-status badge-active">
+                        <i class="fas fa-check-circle"></i> Publicada
+                    </span>
+                    <span th:if="${conv.estado == 'INACTIVA'}" class="badge-status badge-inactive">
+                        <i class="fas fa-pause-circle"></i> Pausada
+                    </span>
+                    <span th:if="${conv.estado == 'ANULADA'}" class="badge-status badge-anulada">
+                        <i class="fas fa-ban"></i> Anulada
+                    </span>
+                </div>
+
+                <div class="card-conv-footer">
+                    <form th:action="@{/institucion/convocatorias/toggle/{id}(id=${conv.id})}" method="post" class="mb-0">
+                        <button type="submit"
+                                th:class="${conv.estado == 'ACTIVA' ? 'btn-toggle off' : 'btn-toggle on'}"
+                                th:if="${conv.estado != 'ANULADA'}">
+                            <i th:class="${conv.estado == 'ACTIVA' ? 'fas fa-toggle-on' : 'fas fa-toggle-off'}"></i>
+                            <span th:text="${conv.estado == 'ACTIVA' ? 'Desactivar' : 'Activar'}"></span>
+                        </button>
+                        <span th:if="${conv.estado == 'ANULADA'}" class="blocked-text">
+                            <i class="fas fa-lock me-1"></i> Bloqueada
+                        </span>
+                    </form>
+
+                    <button class="btn-detail"
+                            data-bs-toggle="modal"
+                            th:data-bs-target="'#modalDetalle' + ${conv.id}">
+                        <i class="fas fa-eye"></i> Detalles
+                    </button>
+                </div>
+
+            </div>
+
+            <div class="modal fade" th:id="'modalDetalle' + ${conv.id}" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" th:text="${conv.titulo}">Titulo Completo</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <p class="modal-label">Descripcion Completa</p>
+                                <p class="modal-desc" th:text="${conv.descripcion}">Descripcion de la convocatoria...</p>
+                            </div>
+
+                            <div class="mb-3">
+                                <p class="modal-label">Categoria</p>
+                                <div style="display:flex;align-items:center;gap:0.5rem;">
+                                    <i class="fas fa-tag" style="color:var(--primary);"></i>
+                                    <span style="font-weight:600;color:var(--text);" th:text="${conv.categoria}">Beca</span>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-6">
+                                    <p class="modal-label">Fecha Inicio</p>
+                                    <p style="font-weight:600;color:var(--text);" th:text="${#temporals.format(conv.fechaInicio, 'dd MMMM yyyy')}"></p>
+                                </div>
+                                <div class="col-6">
+                                    <p class="modal-label">Fecha Fin</p>
+                                    <p style="font-weight:600;color:var(--text);" th:text="${#temporals.format(conv.fechaFin, 'dd MMMM yyyy')}"></p>
+                                </div>
+                            </div>
+
+                            <div class="modal-state-box">
+                                <p class="modal-label" style="margin-bottom:0.4rem;">Estado del Sistema</p>
+
+                                <div th:if="${conv.estado == 'ACTIVA'}" style="color:var(--primary);font-weight:600;">
+                                    <i class="fas fa-check-circle me-1"></i> Visible para estudiantes
+                                </div>
+                                <div th:if="${conv.estado == 'INACTIVA'}" style="color:var(--text-muted);font-weight:600;">
+                                    <i class="fas fa-eye-slash me-1"></i> Oculta (Pausada por ti)
+                                </div>
+                                <div th:if="${conv.estado == 'ANULADA'}" style="color:var(--danger);font-weight:600;">
+                                    <i class="fas fa-ban me-1"></i> Oculta (Moderacion del Admin)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn-modal-close" data-bs-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

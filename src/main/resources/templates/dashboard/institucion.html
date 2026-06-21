@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Panel Institucional | PortalEdu</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --primary: #059669; --primary-dark: #047857; --accent: #d97706;
+            --danger: #dc2626; --text: #1f2937; --text-muted: #6b7280;
+            --bg: #f8fafc; --border: #e5e7eb; --white: #ffffff;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Poppins',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+
+        .navbar { background:var(--white); border-bottom:1px solid rgba(0,0,0,0.04); padding:0.9rem 0; }
+        .navbar-brand { font-weight:700; font-size:1.15rem; color:var(--text)!important; letter-spacing:-0.3px; text-decoration:none; }
+        .navbar-brand i { color:var(--primary); font-size:1.3rem; }
+        .brand-accent { color:var(--primary); font-weight:800; }
+
+        .btn-nav-logout { font-weight:500; font-size:0.8rem; padding:0.45rem 1.1rem; border-radius:50px; color:var(--danger); background:transparent; border:1.5px solid var(--border); transition:all 0.25s; cursor:pointer; }
+        .btn-nav-logout:hover { background:var(--danger); color:white; border-color:var(--danger); box-shadow:0 4px 14px rgba(220,38,38,0.2); }
+
+        .main-container { padding:1.8rem 1rem 4rem; }
+
+        .profile-banner { background:var(--white); border:1px solid var(--border); border-radius:18px; padding:1.5rem 2rem; margin-bottom:1.5rem; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; box-shadow:0 2px 15px rgba(0,0,0,0.03); }
+        .profile-info { display:flex; align-items:center; gap:1rem; }
+        .inst-avatar-lg { width:56px; height:56px; background:linear-gradient(135deg,#059669,#047857); border-radius:14px; display:flex; align-items:center; justify-content:center; color:white; font-size:1.4rem; flex-shrink:0; box-shadow:0 8px 25px rgba(5,150,105,0.25); }
+        .profile-info h4 { font-weight:700; color:var(--text); margin:0; font-size:1.1rem; }
+        .profile-info span { font-size:0.82rem; color:var(--text-muted); }
+
+        .btn-pill-primary { display:inline-flex; align-items:center; gap:0.4rem; padding:0.6rem 1.5rem; border-radius:50px; background:linear-gradient(135deg,#059669,#047857); color:white; font-weight:600; font-size:0.84rem; text-decoration:none; transition:all 0.3s; box-shadow:0 4px 15px rgba(5,150,105,0.2); white-space:nowrap; }
+        .btn-pill-primary:hover { transform:translateY(-2px); box-shadow:0 8px 25px rgba(5,150,105,0.35); color:white; }
+        .btn-pill-outline { display:inline-flex; align-items:center; gap:0.35rem; padding:0.55rem 1.3rem; border-radius:50px; border:1.5px solid var(--border); color:var(--text-muted); font-weight:500; font-size:0.82rem; text-decoration:none; transition:all 0.25s; white-space:nowrap; }
+        .btn-pill-outline:hover { color:var(--primary); border-color:var(--primary); background:rgba(5,150,105,0.03); }
+
+        .section-title { font-size:0.95rem; font-weight:700; color:var(--text); margin-bottom:1rem; display:flex; align-items:center; gap:0.5rem; }
+        .section-title::before { content:''; width:4px; height:22px; background:var(--primary); border-radius:2px; }
+
+        .stat-card { background:var(--white); border:1px solid var(--border); border-radius:16px; padding:1.5rem; transition:all 0.3s; box-shadow:0 2px 12px rgba(0,0,0,0.03); height:100%; position:relative; overflow:hidden; }
+        .stat-card:hover { transform:translateY(-4px); box-shadow:0 12px 35px rgba(5,150,105,0.07); }
+        .stat-card .watermark { position:absolute; right:-10px; bottom:-10px; font-size:5rem; opacity:0.06; transform:rotate(-15deg); pointer-events:none; }
+        .stat-card h2 { font-size:2.2rem; font-weight:800; color:var(--text); margin:0; position:relative; }
+        .stat-card p { font-size:0.82rem; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-muted); margin:0.2rem 0 0; position:relative; }
+
+        .card-glass { background:var(--white); border:1px solid var(--border); border-radius:16px; overflow:hidden; box-shadow:0 2px 15px rgba(0,0,0,0.03); }
+        .card-glass .card-header-clean { background:var(--white); padding:1rem 1.5rem; border-bottom:1px solid var(--border); }
+        .card-glass .card-header-clean h5 { font-weight:700; color:var(--text); margin:0; font-size:0.95rem; }
+        .card-glass .card-body-clean { padding:1.5rem; }
+
+        .alert-card { background:#f9fafb; border:1px solid var(--border); border-radius:12px; padding:1rem 1.2rem; margin-bottom:0.7rem; }
+        .alert-card .alert-title { font-weight:600; color:var(--text); font-size:0.85rem; }
+        .badge-days { display:inline-flex; align-items:center; gap:0.3rem; padding:0.25rem 0.7rem; border-radius:50px; font-size:0.72rem; font-weight:600; background:rgba(220,38,38,0.07); color:var(--danger); border:1px solid rgba(220,38,38,0.12); margin-top:0.3rem; }
+
+        .table-modern { width:100%; border-collapse:collapse; }
+        .table-modern thead th { background:#f9fafb; color:var(--text-muted); font-size:0.74rem; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; padding:0.9rem 1.2rem; border-bottom:2px solid var(--border); white-space:nowrap; }
+        .table-modern thead th:first-child { padding-left:1.5rem; }
+        .table-modern thead th:last-child { padding-right:1.5rem; }
+        .table-modern tbody td { padding:0.9rem 1.2rem; border-bottom:1px solid #f3f4f6; vertical-align:middle; font-size:0.85rem; }
+        .table-modern tbody td:first-child { padding-left:1.5rem; }
+        .table-modern tbody td:last-child { padding-right:1.5rem; }
+        .table-modern tbody tr { transition:background 0.2s; }
+        .table-modern tbody tr:hover { background:rgba(5,150,105,0.015); }
+        .table-modern tbody tr:last-child td { border-bottom:none; }
+
+        .badge-conv-sm { display:inline-flex; align-items:center; gap:0.3rem; padding:0.3rem 0.7rem; border-radius:8px; font-size:0.76rem; font-weight:500; background:rgba(5,150,105,0.05); color:var(--primary); border:1px solid rgba(5,150,105,0.1); }
+
+        .badge-status { display:inline-flex; align-items:center; gap:0.3rem; padding:0.35rem 0.8rem; border-radius:50px; font-size:0.72rem; font-weight:600; white-space:nowrap; }
+        .badge-pending { background:rgba(217,119,6,0.08); color:#b45309; border:1px solid rgba(217,119,6,0.15); }
+        .badge-approved { background:rgba(5,150,105,0.08); color:#059669; border:1px solid rgba(5,150,105,0.15); }
+        .badge-rejected { background:rgba(220,38,38,0.06); color:#dc2626; border:1px solid rgba(220,38,38,0.12); }
+
+        .btn-action-accept { display:inline-flex; align-items:center; gap:0.3rem; padding:0.35rem 0.8rem; border-radius:50px; font-size:0.74rem; font-weight:500; cursor:pointer; transition:all 0.25s; border:1.5px solid #bbf7d0; background:#f0fdf4; color:#059669; }
+        .btn-action-accept:hover { background:#059669; color:white; border-color:#059669; box-shadow:0 4px 12px rgba(5,150,105,0.2); transform:translateY(-1px); }
+        .btn-action-reject { display:inline-flex; align-items:center; gap:0.3rem; padding:0.35rem 0.8rem; border-radius:50px; font-size:0.74rem; font-weight:500; cursor:pointer; transition:all 0.25s; border:1.5px solid #fecaca; background:#fef2f2; color:#dc2626; margin-left:0.4rem; }
+        .btn-action-reject:hover { background:#dc2626; color:white; border-color:#dc2626; box-shadow:0 4px 12px rgba(220,38,38,0.2); transform:translateY(-1px); }
+
+        .text-muted-notice { background:#f9fafb; border-radius:12px; padding:2rem; text-align:center; color:var(--text-muted); }
+
+        @media (max-width:768px) {
+            .profile-banner { flex-direction:column; align-items:flex-start; }
+            .stat-card h2 { font-size:1.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand sticky-top">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="#">
+            <i class="fas fa-university me-2"></i>
+            Portal<span class="brand-accent">Aliados</span>
+        </a>
+        <div class="d-flex align-items-center gap-3">
+            <span class="text-muted d-none d-md-inline" style="font-size:0.85rem;">Hola, <b th:text="${nombreUsuario}" style="color:var(--text);">Institucion</b></span>
+            <form th:action="@{/logout}" method="post" class="mb-0">
+                <button class="btn-nav-logout">
+                    <i class="fas fa-sign-out-alt me-1"></i> Salir
+                </button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="container main-container">
+
+    <div class="profile-banner">
+        <div class="profile-info">
+            <div class="inst-avatar-lg">
+                <i class="fas fa-university"></i>
+            </div>
+            <div>
+                <h4 th:text="${nombreUsuario}">Universidad Nacional</h4>
+                <span>Panel de gestion institucional</span>
+            </div>
+        </div>
+        <div class="d-flex gap-2">
+            <a th:href="@{/institucion/mis-convocatorias}" class="btn-pill-outline">
+                <i class="fas fa-list"></i> Mis Convocatorias
+            </a>
+            <a th:href="@{/convocatorias/nueva}" class="btn-pill-primary">
+                <i class="fas fa-plus"></i> Publicar Nueva
+            </a>
+        </div>
+    </div>
+
+    <div class="section-title">Resumen de Actividad</div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-6">
+            <div class="stat-card">
+                <i class="fas fa-bullhorn watermark"></i>
+                <h2 th:text="${misConvocatoriasCount}">0</h2>
+                <p>Convocatorias Publicadas</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="stat-card">
+                <i class="fas fa-user-graduate watermark"></i>
+                <h2 th:text="${misInscritosCount}">0</h2>
+                <p>Estudiantes Postulados</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-lg-8">
+            <div class="card-glass">
+                <div class="card-header-clean">
+                    <h5><i class="fas fa-chart-pie me-2" style="color:var(--primary);"></i>Estado de Postulaciones</h5>
+                </div>
+                <div class="card-body-clean">
+                    <div style="height:250px;">
+                        <canvas id="inscripcionesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card-glass">
+                <div class="card-header-clean">
+                    <h5><i class="fas fa-bolt me-2" style="color:var(--accent);"></i>Alertas de Cierre</h5>
+                </div>
+                <div class="card-body-clean">
+                    <div th:if="${!alertasCierre.empty}">
+                        <div th:each="conv : ${alertasCierre}" class="alert-card">
+                            <div class="alert-title" th:text="${conv.titulo}">Beca</div>
+                            <span class="badge-days">Cierra: <span th:text="${#temporals.format(conv.fechaFin, 'dd MMM yyyy')}"></span></span>
+                        </div>
+                    </div>
+                    <div th:if="${alertasCierre.empty}" class="text-center py-3 text-muted" style="font-size:0.85rem;">
+                        <i class="fas fa-check-circle me-1" style="color:var(--primary);"></i> No hay alertas de cierre pendientes.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-glass">
+        <div class="card-header-clean" style="display:flex;justify-content:space-between;align-items:center;">
+            <h5><i class="fas fa-clipboard-check me-2" style="color:var(--primary);"></i>Gestion de Postulantes</h5>
+            <a th:href="@{/institucion/reporte-postulantes/pdf}" class="btn-pdf-export">
+                <i class="fas fa-file-pdf"></i> Descargar Reporte PDF
+            </a>
+        </div>
+        <div class="card-body-clean p-0">
+
+            <div th:if="${ultimosInscritos.empty}" class="text-center py-5 text-muted">
+                <i class="fas fa-users-slash fa-2x mb-3 opacity-25"></i>
+                <p style="font-size:0.9rem;">Aun no hay estudiantes inscritos en tus convocatorias.</p>
+            </div>
+
+            <div class="table-responsive" th:if="${!ultimosInscritos.empty}">
+                <table class="table-modern">
+                    <thead>
+                        <tr>
+                            <th>Estudiante</th>
+                            <th>Convocatoria</th>
+                            <th>Correo</th>
+                            <th>Telefono</th>
+                            <th>Fecha</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="ins : ${ultimosInscritos}" th:attr="data-id=${ins.id}" class="ins-row">
+                            <td>
+                                <span style="font-weight:600; color:var(--text);">
+                                    <i class="fas fa-user-circle me-2" style="color:var(--text-muted);"></i>
+                                    <span th:text="${ins.usuario.userName}">Juan</span>
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge-conv-sm" th:text="${ins.convocatoria.titulo}">Beca X</span>
+                            </td>
+                            <td th:text="${ins.usuario.email}" style="color:var(--text-muted);">correo@test.com</td>
+                            <td th:text="${ins.usuario.telefono}" style="color:var(--text-muted);">3001234567</td>
+                            <td style="color:var(--text-muted);">
+                                <span th:text="${#temporals.format(ins.fechaInscripcion, 'dd MMM yyyy')}">01/01/2025</span>
+                            </td>
+                            <td class="estado-cell">
+                                <span th:if="${ins.estado == null or ins.estado == 'PENDIENTE'}" class="badge-status badge-pending">
+                                    <i class="fas fa-clock"></i> Pendiente
+                                </span>
+                                <span th:if="${ins.estado == 'ACEPTADA'}" class="badge-status badge-approved">
+                                    <i class="fas fa-check-circle"></i> Aceptada
+                                </span>
+                                <span th:if="${ins.estado == 'RECHAZADA'}" class="badge-status badge-rejected">
+                                    <i class="fas fa-times-circle"></i> Rechazada
+                                </span>
+                            </td>
+                            <td class="acciones-cell">
+                                <a th:href="@{/convocatorias/comprobante/{id}(id=${ins.id})}" class="btn-action" style="width:32px;height:32px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;font-size:0.78rem;border:1.5px solid #fecaca;color:#dc2626;background:white;text-decoration:none;transition:all 0.25s;"
+                                   title="Descargar Comprobante" data-bs-toggle="tooltip">
+                                    <i class="fas fa-file-pdf"></i>
+                                </a>
+                                <a th:if="${ins.pdfIcfes != null and !ins.pdfIcfes.isEmpty()}"
+                                   th:href="@{/convocatorias/uploads/{filename}(filename=${ins.pdfIcfes})}"
+                                   class="btn-action" style="width:28px;height:28px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;font-size:0.7rem;border:1.5px solid #bfdbfe;color:#2563eb;background:white;text-decoration:none;transition:all 0.25s;"
+                                   title="Ver ICFES" data-bs-toggle="tooltip" target="_blank">
+                                    <i class="fas fa-file-alt"></i>
+                                </a>
+                                <a th:if="${ins.pdfIdentidad != null and !ins.pdfIdentidad.isEmpty()}"
+                                   th:href="@{/convocatorias/uploads/{filename}(filename=${ins.pdfIdentidad})}"
+                                   class="btn-action" style="width:28px;height:28px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;font-size:0.7rem;border:1.5px solid #fecaca;color:#dc2626;background:white;text-decoration:none;transition:all 0.25s;"
+                                   title="Ver Identidad" data-bs-toggle="tooltip" target="_blank">
+                                    <i class="fas fa-id-card"></i>
+                                </a>
+                                <button class="btn-action-accept" th:attr="onclick=|aceptarInscripcion(${ins.id}, this)|"
+                                        th:if="${ins.estado == null or ins.estado == 'PENDIENTE'}">
+                                    <i class="fas fa-check"></i> Aceptar
+                                </button>
+                                <button class="btn-action-reject" th:attr="onclick=|rechazarInscripcion(${ins.id}, this)|"
+                                        th:if="${ins.estado == null or ins.estado == 'PENDIENTE'}">
+                                    <i class="fas fa-times"></i> Rechazar
+                                </button>
+                                <a th:if="${ins.estado == 'RECHAZADA'}"
+                                   th:href="@{/institucion/postulantes/eliminar/{id}(id=${ins.id})}"
+                                   class="btn-action-reject"
+                                   style="margin-left:0.4rem;"
+                                   onclick="return confirm('Eliminar permanentemente esta postulacion rechazada?');"
+                                   title="Eliminar">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>
+                                <span th:if="${ins.estado == 'ACEPTADA'}" style="display:inline-flex;align-items:center;gap:0.5rem;">
+                                    <span style="font-size:0.78rem;color:var(--text-muted);"><i class="fas fa-check-double"></i> Resuelta</span>
+                                    <a th:href="@{/institucion/postulantes/eliminar/{id}(id=${ins.id})}"
+                                       onclick="return confirm('Eliminar esta postulacion?')"
+                                       title="Eliminar" style="color:#dc2626;text-decoration:none;font-size:0.85rem;">
+                                        <i class="fas fa-times"></i>
+                                    </a>
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<meta name="_csrf" th:content="${_csrf.token}"/>
+<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+<script th:inline="javascript">
+    document.addEventListener("DOMContentLoaded", function() {
+        const pendientes = /*[[${chartPendientes}]]*/ 0;
+        const aceptadas = /*[[${chartAceptadas}]]*/ 0;
+        const rechazadas = /*[[${chartRechazadas}]]*/ 0;
+        const ctx = document.getElementById('inscripcionesChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Pendientes', 'Aceptadas', 'Rechazadas'],
+                datasets: [{
+                    label: 'Postulaciones',
+                    data: [pendientes, aceptadas, rechazadas],
+                    backgroundColor: ['#d97706', '#059669', '#dc2626']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+            }
+        });
+    });
+
+    const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+    function cambiarEstado(id, estado, btn) {
+        if (!confirm('Confirma que deseas ' + (estado === 'ACEPTADA' ? 'aceptar' : 'rechazar') + ' esta postulacion?')) return;
+
+        const row = btn.closest('tr');
+        const estadoCell = row.querySelector('.estado-cell');
+        const accionesCell = row.querySelector('.acciones-cell');
+
+        btn.disabled = true;
+        btn.style.opacity = '0.5';
+
+        fetch('/institucion/inscripciones/' + id + '/estado?estado=' + estado, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                [csrfHeader]: csrfToken
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                if (estado === 'ACEPTADA') {
+                    estadoCell.innerHTML = '<span class="badge-status badge-approved"><i class="fas fa-check-circle"></i> Aceptada</span>';
+                } else {
+                    estadoCell.innerHTML = '<span class="badge-status badge-rejected"><i class="fas fa-times-circle"></i> Rechazada</span>';
+                }
+                accionesCell.innerHTML = '<span style="font-size:0.78rem;color:var(--text-muted);"><i class="fas fa-check-double"></i> Resuelta</span>';
+            } else {
+                alert('Error: ' + data.message);
+                btn.disabled = false;
+                btn.style.opacity = '1';
+            }
+        })
+        .catch(error => {
+            alert('Error de conexion: ' + error.message);
+            btn.disabled = false;
+            btn.style.opacity = '1';
+        });
+    }
+
+    function aceptarInscripcion(id, btn) { cambiarEstado(id, 'ACEPTADA', btn); }
+    function rechazarInscripcion(id, btn) { cambiarEstado(id, 'RECHAZADA', btn); }
+</script>
+</body>
+</html>

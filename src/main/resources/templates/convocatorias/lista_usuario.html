@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Convocatorias Disponibles | PortalEdu</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #059669;
+            --primary-dark: #047857;
+            --accent: #d97706;
+            --danger: #dc2626;
+            --text: #1f2937;
+            --text-muted: #6b7280;
+            --bg: #f8fafc;
+            --border: #e5e7eb;
+            --white: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* ========== NAVBAR ========== */
+        .navbar {
+            background: var(--white);
+            border-bottom: 1px solid rgba(0,0,0,0.04);
+            padding: 0.9rem 0;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.15rem;
+            color: var(--text) !important;
+            letter-spacing: -0.3px;
+            text-decoration: none;
+        }
+
+        .navbar-brand i { color: var(--primary); font-size: 1.3rem; }
+
+        .brand-accent { color: var(--primary); font-weight: 800; }
+
+        .btn-nav-back {
+            font-weight: 500;
+            font-size: 0.82rem;
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            color: var(--text-muted);
+            background: transparent;
+            border: 1.5px solid var(--border);
+            transition: all 0.25s ease;
+            letter-spacing: 0.2px;
+            cursor: pointer;
+        }
+
+        .btn-nav-back:hover {
+            color: var(--primary);
+            border-color: var(--primary);
+            background: rgba(5,150,105,0.04);
+        }
+
+        /* ========== CONTENEDOR ========== */
+        .main-container {
+            padding: 2rem 1rem 4rem;
+        }
+
+        /* ========== HEADER ========== */
+        .page-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .page-header h2 {
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 0.25rem;
+            letter-spacing: -0.4px;
+        }
+
+        .page-header p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* ========== ALERTA FLOTANTE ========== */
+        .toast-modern {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+            border: 1px solid #bbf7d0;
+            border-radius: 14px;
+            padding: 0.85rem 1.2rem;
+            margin-bottom: 1.5rem;
+            color: #166534;
+            font-size: 0.88rem;
+            font-weight: 500;
+            box-shadow: 0 8px 25px rgba(5,150,105,0.08);
+            animation: slideDown 0.4s cubic-bezier(0.16,1,0.3,1);
+        }
+
+        .toast-modern i { font-size: 1.1rem; color: var(--primary); }
+        .toast-modern .btn-close { margin-left: auto; font-size: 0.5rem; opacity: 0.5; }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ========== CARD ALERTA ========== */
+        .card-alert {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 1.5rem 1.8rem;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.03);
+            margin-bottom: 1.5rem;
+        }
+
+        .input-pill {
+            width: 100%;
+            padding: 0.7rem 1rem 0.7rem 2.5rem;
+            border: 1.5px solid var(--border);
+            border-radius: 50px;
+            background: #f9fafb;
+            font-size: 0.85rem;
+            font-family: 'Poppins', sans-serif;
+            color: var(--text);
+            transition: all 0.25s ease;
+            outline: none;
+        }
+
+        .input-pill:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(5,150,105,0.06);
+            background: var(--white);
+        }
+
+        .input-pill::placeholder { color: #c4c4c4; }
+
+        .select-pill {
+            width: 100%;
+            padding: 0.7rem 1rem 0.7rem 2.5rem;
+            border: 1.5px solid var(--border);
+            border-radius: 50px;
+            background: #f9fafb;
+            font-size: 0.85rem;
+            font-family: 'Poppins', sans-serif;
+            color: var(--text);
+            transition: all 0.25s ease;
+            outline: none;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: none;
+        }
+
+        .select-pill:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(5,150,105,0.06);
+            background: var(--white);
+        }
+
+        .icon-inside {
+            position: absolute;
+            left: 0.9rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+            font-size: 0.85rem;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .btn-alert {
+            width: 100%;
+            padding: 0.7rem;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(135deg, #059669, #047857);
+            color: white;
+            font-weight: 600;
+            font-size: 0.85rem;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-alert:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 25px rgba(5,150,105,0.3);
+        }
+
+        .hint-text {
+            color: #9ca3af;
+            font-size: 0.78rem;
+        }
+
+        /* ========== SEARCH BAR ========== */
+        .search-wrapper {
+            position: relative;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        .search-wrapper input {
+            width: 100%;
+            padding: 0.85rem 1.2rem 0.85rem 2.8rem;
+            border: 1.5px solid var(--border);
+            border-radius: 50px;
+            background: var(--white);
+            font-size: 0.9rem;
+            font-family: 'Poppins', sans-serif;
+            color: var(--text);
+            transition: all 0.25s ease;
+            outline: none;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+        }
+
+        .search-wrapper input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 5px rgba(5,150,105,0.06);
+        }
+
+        .search-wrapper input::placeholder { color: #c4c4c4; }
+
+        .search-wrapper .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+            font-size: 0.9rem;
+            pointer-events: none;
+        }
+
+        .search-wrapper button {
+            position: absolute;
+            right: 0.35rem;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 0.55rem 1.5rem;
+            border-radius: 50px;
+            border: none;
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+            font-size: 0.82rem;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .search-wrapper button:hover {
+            background: var(--primary-dark);
+            box-shadow: 0 4px 15px rgba(5,150,105,0.3);
+        }
+
+        /* ========== CARDS ========== */
+        .card-conv {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            overflow: hidden;
+            transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.03);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-conv:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 16px 40px rgba(5,150,105,0.08);
+            border-color: rgba(5,150,105,0.2);
+        }
+
+        .card-conv-header {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-conv-header::after {
+            content: '';
+            position: absolute;
+            bottom: -30px;
+            right: -30px;
+            width: 100px;
+            height: 100px;
+            background: rgba(255,255,255,0.06);
+            border-radius: 50%;
+        }
+
+        .card-conv-header i {
+            font-size: 2.5rem;
+            color: rgba(255,255,255,0.2);
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-conv-body {
+            padding: 1.3rem 1.5rem;
+            flex: 1;
+        }
+
+        .card-conv-body .conv-title {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+        }
+
+        .card-conv-body .conv-desc {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .date-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.4rem 0.9rem;
+            border-radius: 10px;
+            font-size: 0.78rem;
+            font-weight: 500;
+            margin-bottom: 0.55rem;
+            background: #f9fafb;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+        }
+
+        .date-badge i { font-size: 0.7rem; }
+        .date-badge .icon-start { color: var(--primary); }
+        .date-badge .icon-end { color: var(--danger); }
+
+        .badge-active-card {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.25rem 0.7rem;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            background: rgba(5,150,105,0.07);
+            color: var(--primary);
+            border: 1px solid rgba(5,150,105,0.12);
+        }
+
+        .card-conv-footer {
+            padding: 0 1.5rem 1.3rem;
+            border: none;
+            background: transparent;
+        }
+
+        .btn-postular {
+            width: 100%;
+            padding: 0.6rem;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(135deg, #059669, #047857);
+            color: white;
+            font-weight: 600;
+            font-size: 0.85rem;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+        }
+
+        .btn-postular:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(5,150,105,0.35);
+        }
+
+        .btn-inscrito {
+            width: 100%;
+            padding: 0.6rem;
+            border-radius: 50px;
+            border: 1.5px solid rgba(5,150,105,0.2);
+            background: rgba(5,150,105,0.05);
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 0.85rem;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            transition: all 0.3s;
+        }
+        .btn-inscrito:hover { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 6px 18px rgba(5,150,105,0.25); }
+        .modal-content { border-radius:18px; border:1px solid var(--border); }
+        .modal-header { background:#f9fafb; border-bottom:1px solid var(--border); }
+        .modal-header h5 { font-weight:700; color:var(--text); }
+        .modal-body { padding:1.5rem; }
+        .info-block { margin-bottom:1.2rem; }
+        .info-label { font-size:0.75rem; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-muted); margin-bottom:0.3rem; }
+        .info-value { color:var(--text); font-size:0.88rem; }
+        .inst-card { background:#f9fafb; border:1px solid var(--border); border-radius:14px; padding:1rem 1.2rem; display:flex; align-items:center; gap:1rem; }
+        .inst-card .inst-icon { width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#059669,#047857);display:flex;align-items:center;justify-content:center;color:white;font-size:1.1rem;flex-shrink:0; }
+        .timeline { position:relative; padding-left:30px; margin-top:1rem; }
+        .timeline::before { content:''; position:absolute; left:14px; top:0; bottom:0; width:2px; background:#e5e7eb; }
+        .tl-item { position:relative; margin-bottom:1rem; padding-left:10px; }
+        .tl-dot { position:absolute; left:-25px; top:0; width:16px;height:16px;border-radius:50%;border:3px solid; }
+        .tl-dot.green { border-color:#059669;background:#f0fdf4; }
+        .tl-dot.amber { border-color:#d97706;background:#fffbeb; }
+        .tl-label { font-size:0.75rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px; }
+        .tl-text { font-size:0.82rem;color:var(--text); }
+
+        /* ========== ESTADO VACIO ========== */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .empty-state i {
+            color: #d1d5db;
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state h5 {
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            .page-header h2 { font-size: 1.35rem; }
+            .search-wrapper button {
+                position: static;
+                transform: none;
+                width: 100%;
+                margin-top: 0.5rem;
+            }
+            .search-wrapper input {
+                padding-right: 1.2rem;
+            }
+            .card-conv-body { padding: 1rem 1.2rem; }
+            .card-conv-footer { padding: 0 1.2rem 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand sticky-top">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="#">
+            <i class="fas fa-graduation-cap me-2"></i>
+            Portal<span class="brand-accent">Estudiante</span>
+        </a>
+        <div class="d-flex">
+            <a th:href="@{/dashboard}" class="btn-nav-back">
+                <i class="fas fa-arrow-left me-1"></i> Volver al Inicio
+            </a>
+        </div>
+    </div>
+</nav>
+
+<div class="container main-container">
+
+    <div class="page-header">
+        <h2>Oportunidades Disponibles</h2>
+        <p>Explora las becas y cursos abiertos para inscripcion.</p>
+    </div>
+
+    <!-- ALERTA GUARDADA -->
+    <div th:if="${param.alertaGuardada}" class="container">
+        <div class="toast-modern" role="alert">
+            <i class="fas fa-check-circle"></i>
+            <strong>Excelente!</strong> Tu alerta ha sido configurada. Te notificaremos pronto.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+
+    <!-- CARD DE ALERTA -->
+    <div class="container mb-4">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="card-alert">
+                    <form th:action="@{/estudiante/guardar-alerta}" method="post">
+                        <div class="row g-3 align-items-end">
+                            <div class="col-lg-5">
+                                <label style="font-size:0.78rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.35rem;display:block;">Palabra clave</label>
+                                <div style="position:relative;">
+                                    <i class="fas fa-search icon-inside"></i>
+                                    <input type="text" name="palabraClave" class="input-pill"
+                                           placeholder="Ej: Java, Contabilidad" required>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <label style="font-size:0.78rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.35rem;display:block;">Categoria</label>
+                                <div style="position:relative;">
+                                    <i class="fas fa-tag icon-inside"></i>
+                                    <select name="categoria" class="select-pill">
+                                        <option value="Beca">Beca</option>
+                                        <option value="Curso">Curso</option>
+                                        <option value="Pasantia">Pasantia</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <button type="submit" class="btn-alert">
+                                    <i class="fas fa-bell me-1"></i> Activar Alerta
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mt-2 text-center">
+                            <small class="hint-text">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Te avisaremos por correo cuando encontremos nuevas oportunidades que coincidan.
+                            </small>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BUSCADOR CON FILTROS AVANZADOS -->
+    <div class="container mb-4">
+        <div class="card-alert">
+            <form th:action="@{/convocatorias/disponibles}" method="get">
+                <div class="row g-2 align-items-end">
+                    <div class="col-md-3">
+                        <label style="font-size:0.74rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.3rem;display:block;">Palabra Clave</label>
+                        <div style="position:relative;">
+                            <i class="fas fa-search" style="position:absolute;left:0.7rem;top:50%;transform:translateY(-50%);color:#9ca3af;font-size:0.8rem;pointer-events:none;"></i>
+                            <input type="text" name="keyword" th:value="${keyword}" class="input-pill" style="padding-left:2.2rem;" placeholder="Titulo...">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label style="font-size:0.74rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.3rem;display:block;">Categoria</label>
+                        <select name="categoria" class="select-pill">
+                            <option value="">Todas</option>
+                            <option value="Beca">Beca</option>
+                            <option value="Curso">Curso</option>
+                            <option value="Pasantia">Pasantia</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label style="font-size:0.74rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.3rem;display:block;">Area</label>
+                        <select name="area" class="select-pill">
+                            <option value="">Todas</option>
+                            <option value="Ingenieria">Ingenieria</option>
+                            <option value="Ciencias de la Salud">Ciencias de la Salud</option>
+                            <option value="Administracion">Administracion</option>
+                            <option value="Ciencias Sociales">Ciencias Sociales</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn-filter" style="width:100%;">
+                            <i class="fas fa-filter"></i> Filtrar Oportunidades
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ESTADO VACIO CON MOOCs -->
+    <div th:if="${convocatorias.empty}">
+        <div class="empty-state">
+            <i class="fas fa-inbox"></i>
+            <h5>No hay convocatorias abiertas en este momento.</h5>
+        </div>
+
+        <div style="text-align:center;margin-bottom:1.5rem;">
+            <h4 style="font-weight:700;color:var(--text);font-size:1.2rem;">Oportunidades de Preparacion Gratuitas</h4>
+            <p style="color:var(--text-muted);font-size:0.85rem;">Educacion Continua</p>
+        </div>
+
+        <div class="row g-4" style="margin-bottom:2rem;">
+            <div class="col-md-4">
+                <div class="card-conv" style="border-left:5px solid #2563eb;">
+                    <div class="card-conv-header" style="background:linear-gradient(135deg,#2563eb,#1d4ed8);">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <div class="card-conv-body">
+                        <span class="conv-title">Taller de Logica de Programacion</span>
+                        <p class="conv-desc">Mejora tu base algoritmica.</p>
+                        <a th:href="@{/estudiante/ver-curso(tipo=logica)}" class="btn-postular" style="background:linear-gradient(135deg,#2563eb,#1d4ed8);">Ver Contenido</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card-conv" style="border-left:5px solid #7c3aed;">
+                    <div class="card-conv-header" style="background:linear-gradient(135deg,#7c3aed,#6d28d9);">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <div class="card-conv-body">
+                        <span class="conv-title">Curso de Comprension Lectora</span>
+                        <p class="conv-desc">Preparate para pruebas de admision.</p>
+                        <a th:href="@{/estudiante/ver-curso(tipo=lectura)}" class="btn-postular" style="background:linear-gradient(135deg,#7c3aed,#6d28d9);">Ver Contenido</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card-conv" style="border-left:5px solid #059669;">
+                    <div class="card-conv-header" style="background:linear-gradient(135deg,#059669,#047857);">
+                        <i class="fas fa-calculator"></i>
+                    </div>
+                    <div class="card-conv-body">
+                        <span class="conv-title">Introduccion a las Matematicas</span>
+                        <p class="conv-desc">Nivelacion universitaria.</p>
+                        <a th:href="@{/estudiante/ver-curso(tipo=matematicas)}" class="btn-postular">Ver Contenido</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- GRID DE CONVOCATORIAS -->
+    <div class="row g-4">
+        <div class="col-md-6 col-lg-4" th:each="conv : ${convocatorias}">
+            <div class="card-conv">
+
+                <div class="card-conv-header">
+                    <i class="fas fa-certificate"></i>
+                </div>
+
+                <div class="card-conv-body">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <span class="conv-title" th:text="${conv.titulo}">Titulo de la Beca</span>
+                        <span class="badge-active-card" th:if="${conv.activa}">
+                            <i class="fas fa-circle" style="font-size:0.35rem;"></i> Activa
+                        </span>
+                    </div>
+
+                    <p class="conv-desc" th:text="${conv.descripcion}">
+                        Descripcion breve de la convocatoria...
+                    </p>
+
+                    <div th:if="${conv.tipoApoyo != null and !conv.tipoApoyo.isEmpty()}" style="margin-bottom:0.6rem;">
+                        <span th:if="${conv.tipoApoyo == 'Beca Completa (100%)'}" style="display:inline-flex;align-items:center;gap:0.25rem;padding:0.2rem 0.6rem;border-radius:50px;font-size:0.7rem;font-weight:600;background:rgba(5,150,105,0.08);color:#059669;border:1px solid rgba(5,150,105,0.15);">
+                            <i class="fas fa-gem"></i> Beca Completa (100%)
+                        </span>
+                        <span th:if="${conv.tipoApoyo == 'Beca Parcial (50%)'}" style="display:inline-flex;align-items:center;gap:0.25rem;padding:0.2rem 0.6rem;border-radius:50px;font-size:0.7rem;font-weight:600;background:rgba(37,99,235,0.08);color:#2563eb;border:1px solid rgba(37,99,235,0.15);">
+                            <i class="fas fa-chart-bar"></i> Beca Parcial (50%)
+                        </span>
+                        <span th:unless="${conv.tipoApoyo == 'Beca Completa (100%)' or conv.tipoApoyo == 'Beca Parcial (50%)'}" style="display:inline-flex;align-items:center;gap:0.25rem;padding:0.2rem 0.6rem;border-radius:50px;font-size:0.7rem;font-weight:600;background:rgba(217,119,6,0.08);color:#b45309;border:1px solid rgba(217,119,6,0.15);" th:text="${conv.tipoApoyo}"></span>
+                    </div>
+                    <div th:if="${conv.precioSemestre != null and !conv.precioSemestre.isEmpty()}" style="font-size:0.74rem;color:var(--text-muted);margin-bottom:0.6rem;">
+                        <i class="fas fa-tag me-1"></i> Valor referencia: <span th:text="${conv.precioSemestre}"></span>
+                    </div>
+
+                    <div class="date-badge">
+                        <i class="far fa-calendar-check icon-start"></i>
+                        <span>Inicio: <b th:text="${#temporals.format(conv.fechaInicio, 'dd/MM/yyyy')}">01/01/2025</b></span>
+                    </div>
+                    <div class="date-badge" style="margin-bottom:0;">
+                        <i class="far fa-calendar-times icon-end"></i>
+                        <span>Cierre: <b th:text="${#temporals.format(conv.fechaFin, 'dd/MM/yyyy')}">30/01/2025</b></span>
+                    </div>
+                </div>
+
+                <div class="card-conv-footer">
+                    <button class="btn-inscrito" data-bs-toggle="modal" th:data-bs-target="'#modalInfo' + ${conv.id}">
+                        <i class="fas fa-search"></i> Ver Detalles
+                    </button>
+                </div>
+
+            </div>
+
+            <div class="modal fade" th:id="'modalInfo' + ${conv.id}" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" th:text="${conv.titulo}">Titulo Convocatoria</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="card bg-light border-0 shadow-sm rounded-3 p-3 mb-3">
+                                <h6 style="font-weight:700;color:var(--text);font-size:0.9rem;margin-bottom:0.6rem;">
+                                    <i class="fas fa-clipboard-list me-2" style="color:var(--primary);"></i>Detalles y Requisitos
+                                </h6>
+                                <p style="font-size:0.84rem;color:var(--text-muted);line-height:1.7;white-space:pre-line;margin:0;" th:text="${conv.descripcion}"></p>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-6">
+                                    <p class="info-label">Fecha Inicio</p>
+                                    <p class="info-value fw-bold" th:text="${#temporals.format(conv.fechaInicio, 'dd MMMM yyyy')}"></p>
+                                </div>
+                                <div class="col-6">
+                                    <p class="info-label">Fecha Cierre</p>
+                                    <p class="info-value fw-bold" th:text="${#temporals.format(conv.fechaFin, 'dd MMMM yyyy')}"></p>
+                                </div>
+                            </div>
+                            <div class="inst-card" th:if="${conv.creador != null}">
+                                <div class="inst-icon"><i class="fas fa-university"></i></div>
+                                <div>
+                                    <p class="fw-bold text-dark mb-0" th:text="${conv.creador.nombreInstitucion != null ? conv.creador.nombreInstitucion : conv.creador.userName}">Institucion</p>
+                                    <small class="text-muted" th:if="${conv.creador.nit != null}">NIT: <span th:text="${conv.creador.nit}"></span></small>
+                                    <p class="small text-muted mt-1 mb-0" th:if="${conv.creador.descripcionInstitucion != null}" th:text="${conv.creador.descripcionInstitucion}"></p>
+                                </div>
+                            </div>
+                            <div class="timeline">
+                                <div class="tl-item">
+                                    <div class="tl-dot green"></div>
+                                    <p class="tl-label">Inicio Convocatoria</p>
+                                    <p class="tl-text" th:text="${#temporals.format(conv.fechaInicio, 'dd MMMM yyyy')}"></p>
+                                </div>
+                                <div class="tl-item" th:if="${inscripcionesEstados[conv.id] == null or inscripcionesEstados[conv.id] == 'PENDIENTE'}">
+                                    <div class="tl-dot amber"></div>
+                                    <p class="tl-label">En Revision</p>
+                                    <p class="tl-text">Tu postulacion esta siendo evaluada por la institucion</p>
+                                </div>
+                                <div class="tl-item" th:if="${inscripcionesEstados[conv.id] == 'ACEPTADA'}">
+                                    <div class="tl-dot" style="border-color:#059669;background:#f0fdf4;"></div>
+                                    <p class="tl-label" style="color:#059669;">Fuiste Aceptado!</p>
+                                    <p class="tl-text">Felicitaciones, la institucion ha aprobado tu perfil para esta oportunidad.</p>
+                                </div>
+                                <div class="tl-item" th:if="${inscripcionesEstados[conv.id] == 'RECHAZADA'}">
+                                    <div class="tl-dot" style="border-color:#dc2626;background:#fef2f2;"></div>
+                                    <p class="tl-label" style="color:#dc2626;">Postulacion Rechazada</p>
+                                    <p class="tl-text">Lo sentimos, en esta ocasion la institucion ha declinado tu postulacion. No te rindas y sigue aplicando!</p>
+                                </div>
+                                <div class="tl-item">
+                                    <div class="tl-dot green"></div>
+                                    <p class="tl-label">Cierre Convocatoria</p>
+                                    <p class="tl-text" th:text="${#temporals.format(conv.fechaFin, 'dd MMMM yyyy')}"></p>
+                            </div>
+                        </div>
+                        <div class="modal-footer border-0" th:unless="${inscripcionesIds.contains(conv.id)}" style="flex-direction:column;align-items:stretch;">
+                            <form th:action="@{/convocatorias/inscribirse/{id}(id=${conv.id})}" method="post" enctype="multipart/form-data">
+                                <div style="text-align:left;margin-bottom:0.8rem;">
+                                    <label style="font-size:0.78rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:0.3rem;">
+                                        <i class="fas fa-file-pdf me-1" style="color:#2563eb;"></i>Adjuntar Resultados ICFES / Saber 11 (PDF):
+                                    </label>
+                                    <input type="file" name="fileIcfes" accept=".pdf" required
+                                           style="width:100%;padding:0.5rem;border:1.5px solid var(--border);border-radius:10px;font-size:0.82rem;font-family:'Poppins',sans-serif;background:#f9fafb;">
+                                </div>
+                                <div style="text-align:left;margin-bottom:1rem;">
+                                    <label style="font-size:0.78rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:0.3rem;">
+                                        <i class="fas fa-id-card me-1" style="color:#dc2626;"></i>Adjuntar Documento de Identidad (PDF):
+                                    </label>
+                                    <input type="file" name="fileIdentidad" accept=".pdf" required
+                                           style="width:100%;padding:0.5rem;border:1.5px solid var(--border);border-radius:10px;font-size:0.82rem;font-family:'Poppins',sans-serif;background:#f9fafb;">
+                                </div>
+                                <button type="submit" class="btn-postular">
+                                    <i class="fas fa-paper-plane"></i> Confirmar Inscripcion y Enviar Documentos
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
