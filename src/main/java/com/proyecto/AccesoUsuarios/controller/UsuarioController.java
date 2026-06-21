@@ -106,6 +106,8 @@ public class UsuarioController {
             usuario.setRol("USER");
             usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
             usuario.setHabilitado(true);
+            usuario.setNombre(usuario.getNombre() != null ? usuario.getNombre() : usuario.getUserName());
+            usuario.setApellido(usuario.getApellido() != null ? usuario.getApellido() : "");
             usuario.setDocumento(usuario.getDocumento() != null ? usuario.getDocumento() : "-");
             usuarioService.save(usuario);
             redirectAttributes.addFlashAttribute("exito", "Estudiante registrado correctamente!");
