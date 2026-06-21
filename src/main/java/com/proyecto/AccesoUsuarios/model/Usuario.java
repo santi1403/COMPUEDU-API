@@ -48,7 +48,7 @@ public class Usuario {
     private String estadoCuenta = "ACTIVO";
 
     // Ahora obligatorio
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     // Ahora obligatorio
@@ -57,6 +57,9 @@ public class Usuario {
 
     @Column(name = "telefono")
     private String telefono;
+
+    @Column(name = "cedula")
+    private String cedula;
 
     @Column(name = "nit")
     private String nit;

@@ -45,10 +45,10 @@ public class PerfilController {
         // IMPORTANTE: Buscamos el usuario REAL de la base de datos
         Usuario usuarioActual = usuarioService.filtrarUsuarios(username, null).get(0);
 
-        // Solo actualizamos los campos permitidos (Email y Teléfono)
-        // NO tocamos password, ni rol, ni id, ni habilitado.
+        // Solo actualizamos los campos permitidos
         usuarioActual.setEmail(usuarioForm.getEmail());
-        usuarioActual.setDocumento(usuarioForm.getDocumento());
+        usuarioActual.setTelefono(usuarioForm.getTelefono());
+        usuarioActual.setCedula(usuarioForm.getCedula());
 
         // Guardamos los cambios
         usuarioService.save(usuarioActual);

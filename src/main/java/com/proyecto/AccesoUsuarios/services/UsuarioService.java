@@ -66,6 +66,10 @@ public class UsuarioService {
         return repo.existsByUserName(userName);
     }
 
+    public boolean existsByEmail(String email) {
+        return repo.existsByEmail(email);
+    }
+
     public void cambiarEstadoUsuario(Long id) {
         Usuario usuario = repo.findById(id)
             .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));

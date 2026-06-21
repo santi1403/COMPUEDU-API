@@ -230,7 +230,9 @@
                                 </div>
                                 <div>
                                     <i class="fas fa-id-card" style="color:#9ca3af;width:18px;"></i>
-                                    <span th:text="${u.documento != null ? u.documento : '-'}">documento</span>
+                                    <span th:if="${u.rol == 'USER'}" th:text="${u.cedula != null ? u.cedula : u.documento != null ? u.documento : '-'}">cedula</span>
+                                    <span th:if="${u.rol == 'INSTITUCION'}" th:text="${u.nit != null ? u.nit : '-'}">nit</span>
+                                    <span th:if="${u.rol == 'ADMIN'}" th:text="${u.documento != null ? u.documento : '-'}">documento</span>
                                 </div>
                             </div>
                         </td>

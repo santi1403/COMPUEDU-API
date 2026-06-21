@@ -37,6 +37,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     
     // (Opcional) Método útil si necesitas validar registro por email
     Optional<Usuario> findByEmail(String email);
+    boolean existsByEmail(String email);
+    Optional<Usuario> findFirstByEmail(String email);
     
     // (Opcional) Para verificar si existe antes de guardar
     boolean existsByUserName(String userName);

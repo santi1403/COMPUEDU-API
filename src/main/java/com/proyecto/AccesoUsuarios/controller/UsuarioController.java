@@ -81,6 +81,9 @@ public class UsuarioController {
         try {
             usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
             usuario.setHabilitado(true);
+            usuario.setNombre(usuario.getNombre() != null ? usuario.getNombre() : usuario.getUserName());
+            usuario.setApellido(usuario.getApellido() != null ? usuario.getApellido() : "");
+            usuario.setDocumento(usuario.getDocumento() != null ? usuario.getDocumento() : "-");
             usuarioService.save(usuario);
             redirectAttributes.addFlashAttribute("exito", "¡Usuario registrado correctamente!");
             return "redirect:/login"; 
@@ -100,6 +103,10 @@ public class UsuarioController {
     public String registrarEstudiante(@ModelAttribute Usuario usuario, RedirectAttributes redirectAttributes) {
         if (usuarioService.existsByUserName(usuario.getUserName())) {
             redirectAttributes.addFlashAttribute("error", "El nombre de usuario ya existe.");
+            return "redirect:/registro/estudiante";
+        }
+        if (usuario.getEmail() != null && usuarioService.existsByEmail(usuario.getEmail())) {
+            redirectAttributes.addFlashAttribute("error", "El correo ya esta registrado.");
             return "redirect:/registro/estudiante";
         }
         try {
@@ -138,6 +145,10 @@ public class UsuarioController {
     public String registrarInstitucion(@ModelAttribute Usuario usuario, RedirectAttributes redirectAttributes) {
         if (usuarioService.existsByUserName(usuario.getUserName())) {
             redirectAttributes.addFlashAttribute("error", "El nombre de usuario ya existe.");
+            return "redirect:/registro/institucion";
+        }
+        if (usuario.getEmail() != null && usuarioService.existsByEmail(usuario.getEmail())) {
+            redirectAttributes.addFlashAttribute("error", "El correo ya esta registrado.");
             return "redirect:/registro/institucion";
         }
         try {

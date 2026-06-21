@@ -33,8 +33,8 @@ public class PassswordServices {
     private PasswordEncoder passwordEncoder;
 
     public void solicitarRestablecimiento(String email) {
-        // 1. Buscar al usuario por email
-        Optional<Usuario> usuarioOpt = usuarioRepository.findByEmail(email);
+        // 1. Buscar al usuario por email (toma el primero si hay duplicados)
+        Optional<Usuario> usuarioOpt = usuarioRepository.findFirstByEmail(email);
 
         if (usuarioOpt.isPresent()) {
             Usuario usuario = usuarioOpt.get();
