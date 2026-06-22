@@ -3,6 +3,7 @@ package com.proyecto.AccesoUsuarios.services;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -14,6 +15,7 @@ public class EmailService {
     private static final String MAILTRAP_URL = "https://sandbox.smtp.mailtrap.io/api/send";
     private static final String API_TOKEN = "0884ed46f85f5d50d0cbb8ff3e10062b";
 
+    @Async
     public void enviarEnlaceRecuperacion(String destinatario, String link) {
         try {
             HttpHeaders headers = new HttpHeaders();

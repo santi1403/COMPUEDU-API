@@ -18,6 +18,9 @@ public class PassswordServices {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private EmailService emailService;
+
     public String solicitarRestablecimiento(String email) {
         Optional<Usuario> usuarioOpt = usuarioRepository.findFirstByEmail(email);
 
@@ -28,7 +31,12 @@ public class PassswordServices {
             usuario.setTokenRecuperacion(token);
             usuarioRepository.save(usuario);
 
-            return "http://localhost:8080/auth/reset-password?token=" + token;
+            String linkDeRecuperacion = "http://localhost:8080/auth/reset-password?token=" + token;
+
+            // Intenta enviar correo en segundo plano (no bloquea)
+            emailService.enviarEnlaceRecuperacion(email, linkDeRecuperacion);
+
+            return linkDeRecuperacion;
         }
         return null;
     }
