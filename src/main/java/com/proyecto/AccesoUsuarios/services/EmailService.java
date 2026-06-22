@@ -11,10 +11,8 @@ import java.util.Map;
 @Service
 public class EmailService {
 
-    private static final String MAILTRAP_URL = "https://sandbox.api.mailtrap.io/api/send/boxes/4727911/emails";
+    private static final String MAILTRAP_URL = "https://sandbox.smtp.mailtrap.io/api/send";
     private static final String API_TOKEN = "0884ed46f85f5d50d0cbb8ff3e10062b";
-
-    private final RestTemplate restTemplate = new RestTemplate();
 
     public void enviarEnlaceRecuperacion(String destinatario, String link) {
         try {
@@ -39,6 +37,11 @@ public class EmailService {
 
         } catch (Exception e) {
             System.err.println("Error al enviar correo: " + e.getMessage());
+            System.out.println("========================================");
+            System.out.println("ENLACE DE RECUPERACION GENERADO: " + link);
+            System.out.println("========================================");
         }
     }
+
+    private final RestTemplate restTemplate = new RestTemplate();
 }
