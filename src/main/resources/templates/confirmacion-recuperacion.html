@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Enlace de Recuperacion | PortalEdu</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root { --primary:#059669; --text:#1f2937; --text-muted:#6b7280; }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Poppins',sans-serif; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:1.5rem; background:#f8fafc; }
+        .card { background:#fff; border:1px solid #e5e7eb; border-radius:20px; padding:2.5rem 2rem; max-width:560px; text-align:center; box-shadow:0 20px 50px rgba(0,0,0,0.06); animation:fadeIn 0.6s ease; width:100%; }
+        @keyframes fadeIn { from{opacity:0;transform:translateY(30px);} to{opacity:1;transform:translateY(0);} }
+        .icon-circle { width:80px;height:80px;border-radius:50%;background:rgba(5,150,105,0.08);display:inline-flex;align-items:center;justify-content:center;margin-bottom:1rem; }
+        .icon-circle i { font-size:2rem;color:var(--primary); }
+        .card h2 { font-size:1.4rem;font-weight:700;color:var(--text);margin-bottom:0.5rem; }
+        .card p { color:var(--text-muted);font-size:0.9rem;margin-bottom:1.2rem; }
+        .link-box { background:#f0fdf4; border:1px dashed #bbf7d0; border-radius:12px; padding:1rem; word-break:break-all; font-size:0.85rem; color:#047857; font-family:monospace; margin-bottom:1.2rem; user-select:all; cursor:pointer; }
+        .btn-copiar { display:inline-flex; align-items:center; gap:0.3rem; padding:0.6rem 1.5rem; border-radius:50px; background:linear-gradient(135deg,#059669,#047857); color:white; border:none; font-weight:600; font-size:0.88rem; cursor:pointer; transition:all 0.3s; margin-bottom:1rem; }
+        .btn-copiar:hover { transform:translateY(-2px); box-shadow:0 8px 25px rgba(5,150,105,0.3); }
+        .btn-back { display:inline-flex; align-items:center; gap:0.3rem; color:var(--text-muted); font-size:0.85rem; text-decoration:none; }
+        .btn-back:hover { color:var(--primary); }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <div class="icon-circle">
+        <i class="fas fa-link"></i>
+    </div>
+    <h2>Enlace de Recuperacion</h2>
+    <p>Copia el siguiente enlace y pegalo en tu navegador para restablecer tu contrasena:</p>
+
+    <div class="link-box" th:text="${link}" id="linkTexto">http://localhost:8080/auth/reset-password?token=abc123</div>
+
+    <button class="btn-copiar" onclick="copiarLink()">
+        <i class="fas fa-copy"></i> Copiar Enlace
+    </button>
+
+    <br>
+    <a th:href="@{/auth/recuperar}" class="btn-back">
+        <i class="fas fa-arrow-left"></i> Volver
+    </a>
+</div>
+
+<script>
+    function copiarLink() {
+        var link = document.getElementById('linkTexto').textContent;
+        navigator.clipboard.writeText(link).then(function() {
+            alert('Enlace copiado al portapapeles!');
+        });
+    }
+</script>
+
+</body>
+</html>

@@ -18,10 +18,7 @@ public class PassswordServices {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private EmailService emailService;
-
-    public void solicitarRestablecimiento(String email) {
+    public String solicitarRestablecimiento(String email) {
         Optional<Usuario> usuarioOpt = usuarioRepository.findFirstByEmail(email);
 
         if (usuarioOpt.isPresent()) {
@@ -31,17 +28,9 @@ public class PassswordServices {
             usuario.setTokenRecuperacion(token);
             usuarioRepository.save(usuario);
 
-            String linkDeRecuperacion = "http://localhost:8080/auth/reset-password?token=" + token;
-
-            try {
-                emailService.enviarEnlaceRecuperacion(email, linkDeRecuperacion);
-                System.out.println("Correo de recuperacion enviado a: " + email);
-            } catch (Exception e) {
-                System.err.println("Error enviando correo: " + e.getMessage());
-            }
-        } else {
-            System.err.println("No se encontro usuario con el email: " + email);
+            return "http://localhost:8080/auth/reset-password?token=" + token;
         }
+        return null;
     }
 
     public boolean cambiarPasswordConToken(String token, String nuevaPassword) {
