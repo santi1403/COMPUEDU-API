@@ -1,6 +1,5 @@
 package com.proyecto.AccesoUsuarios.services;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -12,8 +11,8 @@ import java.util.Map;
 @Service
 public class EmailService {
 
-    @Value("${mailtrap.api.token}")
-    private String mailtrapApiToken;
+    private static final String MAILTRAP_URL = "https://sandbox.api.mailtrap.io/api/send/boxes/4727911/emails";
+    private static final String API_TOKEN = "0884ed46f85f5d50d0cbb8ff3e10062b";
 
     private final RestTemplate restTemplate = new RestTemplate();
 
@@ -21,7 +20,7 @@ public class EmailService {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.set("Api-Token", mailtrapApiToken);
+            headers.set("Api-Token", API_TOKEN);
 
             Map<String, Object> body = Map.of(
                 "from", Map.of("email", "noreply@portaledu.com", "name", "PortalEdu"),
@@ -35,8 +34,7 @@ public class EmailService {
             );
 
             HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);
-            String url = "https://sandbox.api.mailtrap.io/api/send/boxes/4727911/emails";
-            restTemplate.postForEntity(url, request, String.class);
+            restTemplate.postForEntity(MAILTRAP_URL, request, String.class);
             System.out.println("Correo enviado exitosamente a: " + destinatario);
 
         } catch (Exception e) {
