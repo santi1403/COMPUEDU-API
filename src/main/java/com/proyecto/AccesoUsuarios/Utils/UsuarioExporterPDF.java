@@ -21,21 +21,18 @@ public class UsuarioExporterPDF {
     }
 
     private void escribirCabeceraDeLaTabla(PdfPTable tabla) {
-        PdfPCell celda = new PdfPCell();
-        celda.setBackgroundColor(new Color(31, 41, 55)); // Gris azulado oscuro
-        celda.setPadding(7);
-        celda.setHorizontalAlignment(Element.ALIGN_CENTER);
-        celda.setVerticalAlignment(Element.ALIGN_MIDDLE);
-
         Font fuente = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
         fuente.setColor(Color.WHITE);
-        fuente.setSize(9);
+        fuente.setSize(7);
 
-        // Columnas actualizadas para incluir Nombres y Apellidos por separado
-        String[] columnas = {"ID", "USUARIO", "NOMBRES", "APELLIDOS", "EMAIL", "CEDULA", "TELEFONO", "DIRECCION", "NIVEL EDUC.", "DOCUMENTO", "ROL", "ESTADO"};
+        String[] columnas = {"ID", "USUARIO", "NOMBRE", "APELLIDO", "EMAIL", "CEDULA", "TELEFONO", "DIRECCION", "NIVEL", "DOC", "ROL", "EST"};
 
         for (String columna : columnas) {
-            celda.setPhrase(new Phrase(columna, fuente));
+            PdfPCell celda = new PdfPCell(new Phrase(columna, fuente));
+            celda.setBackgroundColor(new Color(31, 41, 55));
+            celda.setPadding(5);
+            celda.setHorizontalAlignment(Element.ALIGN_CENTER);
+            celda.setVerticalAlignment(Element.ALIGN_MIDDLE);
             tabla.addCell(celda);
         }
     }
