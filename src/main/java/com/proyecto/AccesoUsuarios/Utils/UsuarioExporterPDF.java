@@ -118,7 +118,7 @@ public class UsuarioExporterPDF {
         PdfPTable tabla = new PdfPTable(12);
         tabla.setWidthPercentage(100f);
         // Ajuste de anchos para que quepan los nombres y apellidos
-        tabla.setWidths(new float[] {0.6f, 1.4f, 1.8f, 1.8f, 2.5f, 1.4f, 1.2f, 1.2f});
+        tabla.setWidths(new float[] {0.5f, 1.2f, 1.5f, 1.5f, 2f, 1.2f, 1f, 1.2f, 0.8f, 1f, 0.8f, 0.8f});
 
         escribirCabeceraDeLaTabla(tabla);
         escribirDatosDeLaTabla(tabla);
