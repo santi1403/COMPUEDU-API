@@ -669,8 +669,11 @@
                         </span>
                         <span th:unless="${conv.tipoApoyo == 'Beca Completa (100%)' or conv.tipoApoyo == 'Beca Parcial (50%)'}" style="display:inline-flex;align-items:center;gap:0.25rem;padding:0.2rem 0.6rem;border-radius:50px;font-size:0.7rem;font-weight:600;background:rgba(217,119,6,0.08);color:#b45309;border:1px solid rgba(217,119,6,0.15);" th:text="${conv.tipoApoyo}"></span>
                     </div>
-                    <div th:if="${conv.precioSemestre != null and !conv.precioSemestre.isEmpty()}" style="font-size:0.74rem;color:var(--text-muted);margin-bottom:0.6rem;">
+                    <div th:if="${conv.precioSemestre != null and !conv.precioSemestre.isEmpty()}" style="font-size:0.74rem;color:var(--text-muted);margin-bottom:0.3rem;">
                         <i class="fas fa-tag me-1"></i> Valor referencia: <span th:text="${conv.precioSemestre}"></span>
+                    </div>
+                    <div style="font-size:0.74rem;color:var(--text-muted);margin-bottom:0.6rem;">
+                        <i class="fas fa-users me-1"></i> Cupos: <b th:text="${conv.cupos}">35</b>
                     </div>
 
                     <div class="date-badge">

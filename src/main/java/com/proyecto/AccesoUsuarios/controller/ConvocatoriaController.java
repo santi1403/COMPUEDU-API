@@ -189,6 +189,13 @@ public class ConvocatoriaController {
         Convocatoria conv = convocatoriaRepo.findById(id).orElseThrow();
 
         if (!inscripcionRepo.existsByUsuarioAndConvocatoria(usuario, conv)) {
+
+            long inscritos = inscripcionRepo.countByConvocatoria(conv);
+            if (inscritos >= conv.getCupos()) {
+                redirectAttrs.addFlashAttribute("error", "Lo sentimos, los cupos para esta convocatoria ya estan llenos.");
+                return "redirect:/convocatorias/disponibles";
+            }
+
             Inscripcion ins = new Inscripcion();
             ins.setUsuario(usuario);
             ins.setConvocatoria(conv);

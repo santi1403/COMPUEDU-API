@@ -36,6 +36,8 @@ public class Convocatoria {
     private String tipoApoyo;
     private String precioSemestre;
 
+    private int cupos = 35;
+
     // RELACIÓN NECESARIA PARA EL DASHBOARD
     @ManyToOne
     @JoinColumn(name = "creador_id") 
@@ -80,4 +82,7 @@ public class Convocatoria {
 
     public String getPrecioSemestre() { return precioSemestre; }
     public void setPrecioSemestre(String precioSemestre) { this.precioSemestre = precioSemestre; }
+
+    public int getCupos() { return cupos; }
+    public void setCupos(int cupos) { this.cupos = cupos; }
 }

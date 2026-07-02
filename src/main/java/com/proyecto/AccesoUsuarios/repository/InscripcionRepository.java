@@ -30,4 +30,6 @@ public interface InscripcionRepository extends JpaRepository<Inscripcion, Long> 
     long countByEstado(String estado);
 
     List<Inscripcion> findTop6ByOrderByIdDesc();
+
+    long countByConvocatoria(Convocatoria convocatoria);
 }
