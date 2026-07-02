@@ -234,6 +234,14 @@
                                     <span th:if="${u.rol == 'INSTITUCION'}" th:text="${u.nit != null ? u.nit : '-'}">nit</span>
                                     <span th:if="${u.rol == 'ADMIN'}" th:text="${u.documento != null ? u.documento : '-'}">documento</span>
                                 </div>
+                                <div th:if="${u.rol == 'USER' and u.direccion != null}" style="margin-top:0.15rem;">
+                                    <i class="fas fa-map-marker-alt" style="color:#9ca3af;width:18px;"></i>
+                                    <span th:text="${u.direccion}">direccion</span>
+                                </div>
+                                <div th:if="${u.rol == 'USER' and u.nivelEducativo != null}" style="margin-top:0.15rem;">
+                                    <i class="fas fa-graduation-cap" style="color:#9ca3af;width:18px;"></i>
+                                    <span th:text="${u.nivelEducativo}">nivel</span>
+                                </div>
                             </div>
                         </td>
 

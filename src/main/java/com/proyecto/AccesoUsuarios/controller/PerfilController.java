@@ -39,6 +39,8 @@ public class PerfilController {
             usuarioActual.setEmail(usuarioForm.getEmail());
             usuarioActual.setTelefono(usuarioForm.getTelefono());
             usuarioActual.setCedula(usuarioForm.getCedula());
+            usuarioActual.setDireccion(usuarioForm.getDireccion());
+            usuarioActual.setNivelEducativo(usuarioForm.getNivelEducativo());
 
             usuarioService.save(usuarioActual);
             redirectAttrs.addFlashAttribute("mensaje", "Perfil actualizado con exito!");

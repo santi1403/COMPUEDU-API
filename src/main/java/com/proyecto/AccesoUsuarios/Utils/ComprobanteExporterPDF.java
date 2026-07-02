@@ -69,10 +69,17 @@ public class ComprobanteExporterPDF {
         tabla.setWidths(new float[]{1, 2});
 
         agregarSeccion(tabla, "DATOS DEL ESTUDIANTE", fSubtitulo, grisOscuro);
-        agregarFila(tabla, "Nombre:", inscripcion.getUsuario().getUserName(), fNegrita, fNormal);
+        String nombreCompleto = inscripcion.getUsuario().getNombre() != null ? inscripcion.getUsuario().getNombre() : inscripcion.getUsuario().getUserName();
+        if (inscripcion.getUsuario().getApellido() != null && !inscripcion.getUsuario().getApellido().isEmpty()) {
+            nombreCompleto += " " + inscripcion.getUsuario().getApellido();
+        }
+        agregarFila(tabla, "Nombre:", nombreCompleto, fNegrita, fNormal);
+        agregarFila(tabla, "Usuario:", inscripcion.getUsuario().getUserName(), fNegrita, fNormal);
         agregarFila(tabla, "Cedula:", inscripcion.getUsuario().getCedula() != null ? inscripcion.getUsuario().getCedula() : "N/A", fNegrita, fNormal);
         agregarFila(tabla, "Correo:", inscripcion.getUsuario().getEmail() != null ? inscripcion.getUsuario().getEmail() : "N/A", fNegrita, fNormal);
         agregarFila(tabla, "Telefono:", inscripcion.getUsuario().getTelefono() != null ? inscripcion.getUsuario().getTelefono() : "N/A", fNegrita, fNormal);
+        agregarFila(tabla, "Direccion:", inscripcion.getUsuario().getDireccion() != null ? inscripcion.getUsuario().getDireccion() : "N/A", fNegrita, fNormal);
+        agregarFila(tabla, "Nivel Educativo:", inscripcion.getUsuario().getNivelEducativo() != null ? inscripcion.getUsuario().getNivelEducativo() : "N/A", fNegrita, fNormal);
         agregarFila(tabla, "ID Registro:", String.valueOf(inscripcion.getId()), fNegrita, fNormal);
         agregarFila(tabla, "Estado:", inscripcion.getEstado(), fNegrita, fNormal);
 
@@ -80,7 +87,10 @@ public class ComprobanteExporterPDF {
         agregarFila(tabla, "Titulo:", inscripcion.getConvocatoria().getTitulo(), fNegrita, fNormal);
         agregarFila(tabla, "Categoria:", inscripcion.getConvocatoria().getCategoria() != null ? inscripcion.getConvocatoria().getCategoria() : "N/A", fNegrita, fNormal);
         String area = inscripcion.getConvocatoria().getAreaConocimiento() != null ? inscripcion.getConvocatoria().getAreaConocimiento() : "N/A";
-        agregarFila(tabla, "Area:", area, fNegrita, fNormal);
+        agregarFila(tabla, "Area de Conocimiento:", area, fNegrita, fNormal);
+        agregarFila(tabla, "Modalidad:", inscripcion.getConvocatoria().getModalidad() != null ? inscripcion.getConvocatoria().getModalidad() : "N/A", fNegrita, fNormal);
+        agregarFila(tabla, "Apoyo Financiero:", inscripcion.getConvocatoria().getTipoApoyo() != null ? inscripcion.getConvocatoria().getTipoApoyo() : "N/A", fNegrita, fNormal);
+        agregarFila(tabla, "Precio Semestre:", inscripcion.getConvocatoria().getPrecioSemestre() != null ? inscripcion.getConvocatoria().getPrecioSemestre() : "N/A", fNegrita, fNormal);
         agregarFila(tabla, "Cupos totales:", String.valueOf(inscripcion.getConvocatoria().getCupos()), fNegrita, fNormal);
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
         agregarFila(tabla, "Fecha Registro:", inscripcion.getFechaInscripcion().format(fmt), fNegrita, fNormal);
@@ -88,15 +98,18 @@ public class ComprobanteExporterPDF {
         if (creador != null) {
             agregarSeccion(tabla, "INSTITUCION", fSubtitulo, grisOscuro);
             String nombreInst = creador.getNombreInstitucion() != null ? creador.getNombreInstitucion() : creador.getUserName();
-            agregarFila(tabla, "Institucion:", nombreInst, fNegrita, fNormal);
+            agregarFila(tabla, "Nombre:", nombreInst, fNegrita, fNormal);
             if (creador.getNit() != null) agregarFila(tabla, "NIT:", creador.getNit(), fNegrita, fNormal);
             if (creador.getDescripcionInstitucion() != null) agregarFila(tabla, "Descripcion:", creador.getDescripcionInstitucion(), fNegrita, fNormal);
         }
 
         String docs = "";
-        if (inscripcion.getPdfIcfes() != null) docs += "ICFES: " + inscripcion.getPdfIcfes() + " | ";
-        if (inscripcion.getPdfIdentidad() != null) docs += "Identidad: " + inscripcion.getPdfIdentidad();
-        if (!docs.isEmpty()) agregarFila(tabla, "Documentos:", docs, fNegrita, fNormal);
+        if (inscripcion.getPdfIcfes() != null) docs += "ICFES: " + inscripcion.getPdfIcfes();
+        if (inscripcion.getPdfIdentidad() != null) docs += (docs.isEmpty() ? "" : " | ") + "Identidad: " + inscripcion.getPdfIdentidad();
+        if (!docs.isEmpty()) {
+            agregarSeccion(tabla, "DOCUMENTOS ADJUNTOS", fSubtitulo, grisOscuro);
+            agregarFila(tabla, "Archivos:", docs, fNegrita, fNormal);
+        }
 
         documento.add(tabla);
 

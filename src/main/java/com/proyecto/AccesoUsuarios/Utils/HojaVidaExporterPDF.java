@@ -39,35 +39,37 @@ public class HojaVidaExporterPDF {
         titulo.setAlignment(Element.ALIGN_CENTER);
         doc.add(titulo);
 
-        Paragraph sub = new Paragraph("Estudiante: " + nombreEstudiante + " | Total: " + inscripciones.size() + " postulaciones",
+        Paragraph sub = new Paragraph("Reporte generado por PortalEdu | " + nombreEstudiante + " | Total: " + inscripciones.size() + " registros",
                 FontFactory.getFont(FontFactory.HELVETICA, 9, Color.GRAY));
         sub.setAlignment(Element.ALIGN_CENTER);
         sub.setSpacingAfter(18);
         doc.add(sub);
 
-        PdfPTable table = new PdfPTable(6);
+        PdfPTable table = new PdfPTable(7);
         table.setWidthPercentage(100);
         table.setSpacingBefore(8);
-        float[] widths = {2.2f, 1.5f, 1f, 1f, 1.2f, 1f};
+        float[] widths = {1.8f, 1.2f, 1.2f, 1.8f, 1f, 1f, 0.8f};
         table.setWidths(widths);
 
+        addHeader(table, "Estudiante", fSec, gris);
+        addHeader(table, "Cedula", fSec, gris);
+        addHeader(table, "Contacto", fSec, gris);
         addHeader(table, "Convocatoria", fSec, gris);
-        addHeader(table, "Institucion", fSec, gris);
-        addHeader(table, "Categoria", fSec, gris);
         addHeader(table, "Fecha", fSec, gris);
         addHeader(table, "Estado", fSec, gris);
         addHeader(table, "Folio", fSec, gris);
 
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         for (Inscripcion ins : inscripciones) {
-            String inst = ins.getConvocatoria().getCreador() != null
-                    && ins.getConvocatoria().getCreador().getNombreInstitucion() != null
-                    ? ins.getConvocatoria().getCreador().getNombreInstitucion()
-                    : "N/A";
+            String nombre = ins.getUsuario().getNombre() != null ? ins.getUsuario().getNombre() : ins.getUsuario().getUserName();
+            String cedula = ins.getUsuario().getCedula() != null ? ins.getUsuario().getCedula() : "-";
+            String contacto = (ins.getUsuario().getTelefono() != null ? ins.getUsuario().getTelefono() : "-")
+                    + " / " + (ins.getUsuario().getEmail() != null ? ins.getUsuario().getEmail() : "-");
 
+            addCell(table, nombre, fN);
+            addCell(table, cedula, fN);
+            addCell(table, contacto, fN);
             addCell(table, ins.getConvocatoria().getTitulo(), fN);
-            addCell(table, inst, fN);
-            addCell(table, ins.getConvocatoria().getCategoria() != null ? ins.getConvocatoria().getCategoria() : "N/A", fN);
             addCell(table, ins.getFechaInscripcion().format(fmt), fN);
             addCell(table, ins.getEstado(), fN);
             addCell(table, "#" + ins.getId(), fN);

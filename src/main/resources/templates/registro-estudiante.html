@@ -82,7 +82,12 @@
             <input type="text" th:field="*{userName}" class="input-modern" placeholder="Nombre de usuario" required>
         </div>
 
-        <div class="input-group-modern" style="animation-delay:0.50s">
+        <div class="input-group-modern" style="animation-delay:0.52s">
+            <i class="fas fa-user-circle input-icon"></i>
+            <input type="text" th:field="*{nombre}" class="input-modern" placeholder="Nombre completo" pattern="[A-Za-z ]{3,}" required>
+        </div>
+
+        <div class="input-group-modern" style="animation-delay:0.55s">
             <i class="fas fa-id-card input-icon"></i>
             <input type="text" th:field="*{cedula}" class="input-modern" placeholder="Cedula de ciudadania" required>
         </div>
@@ -96,6 +101,24 @@
             <i class="fas fa-phone input-icon"></i>
             <input type="tel" th:field="*{telefono}" class="input-modern" placeholder="Telefono de contacto"
                    pattern="\d+" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+        </div>
+
+        <div class="input-group-modern" style="animation-delay:0.60s">
+            <i class="fas fa-map-marker-alt input-icon"></i>
+            <input type="text" th:field="*{direccion}" class="input-modern" placeholder="Direccion de residencia">
+        </div>
+
+        <div class="input-group-modern" style="animation-delay:0.62s">
+            <i class="fas fa-graduation-cap input-icon"></i>
+            <select th:field="*{nivelEducativo}" class="input-modern" style="appearance:none;-webkit-appearance:none;padding-right:2.5rem;cursor:pointer;background-image:none;">
+                <option value="">Selecciona tu nivel educativo</option>
+                <option value="Bachiller">Bachiller</option>
+                <option value="Tecnico">Tecnico</option>
+                <option value="Tecnologo">Tecnologo</option>
+                <option value="Profesional">Profesional</option>
+                <option value="Posgrado">Posgrado</option>
+            </select>
+            <i class="fas fa-chevron-down" style="position:absolute;right:1rem;top:50%;transform:translateY(-50%);color:#9ca3af;font-size:0.7rem;pointer-events:none;z-index:2;"></i>
         </div>
 
         <div class="input-group-modern" style="animation-delay:0.66s">

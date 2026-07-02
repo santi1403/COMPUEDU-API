@@ -61,6 +61,12 @@ public class Usuario {
     @Column(name = "cedula")
     private String cedula;
 
+    @Column(name = "direccion")
+    private String direccion;
+
+    @Column(name = "nivel_educativo")
+    private String nivelEducativo;
+
     @Column(name = "nit")
     private String nit;
 

@@ -32,7 +32,7 @@ public class UsuarioExporterPDF {
         fuente.setSize(9);
 
         // Columnas actualizadas para incluir Nombres y Apellidos por separado
-        String[] columnas = {"ID", "USUARIO", "NOMBRES", "APELLIDOS", "EMAIL", "DOCUMENTO", "ROL", "ESTADO"};
+        String[] columnas = {"ID", "USUARIO", "NOMBRES", "APELLIDOS", "EMAIL", "CEDULA", "TELEFONO", "DIRECCION", "NIVEL EDUC.", "DOCUMENTO", "ROL", "ESTADO"};
 
         for (String columna : columnas) {
             celda.setPhrase(new Phrase(columna, fuente));
@@ -55,6 +55,10 @@ public class UsuarioExporterPDF {
             tabla.addCell(crearCeldaDato(usuario.getNombre(), fuenteDatos)); //
             tabla.addCell(crearCeldaDato(usuario.getApellido(), fuenteDatos)); //
             tabla.addCell(crearCeldaDato(usuario.getEmail(), fuenteDatos));
+            tabla.addCell(crearCeldaDato(usuario.getCedula(), fuenteDatos));
+            tabla.addCell(crearCeldaDato(usuario.getTelefono(), fuenteDatos));
+            tabla.addCell(crearCeldaDato(usuario.getDireccion(), fuenteDatos));
+            tabla.addCell(crearCeldaDato(usuario.getNivelEducativo(), fuenteDatos));
             tabla.addCell(crearCeldaDato(usuario.getDocumento(), fuenteDatos));
 
             // Rol centrado
@@ -114,7 +118,7 @@ public class UsuarioExporterPDF {
         documento.add(info);
 
         // --- TABLA (8 columnas ahora) ---
-        PdfPTable tabla = new PdfPTable(8);
+        PdfPTable tabla = new PdfPTable(12);
         tabla.setWidthPercentage(100f);
         // Ajuste de anchos para que quepan los nombres y apellidos
         tabla.setWidths(new float[] {0.6f, 1.4f, 1.8f, 1.8f, 2.5f, 1.4f, 1.2f, 1.2f});

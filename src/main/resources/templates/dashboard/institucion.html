@@ -217,6 +217,12 @@
                                     <i class="fas fa-user-circle me-2" style="color:var(--text-muted);"></i>
                                     <span th:text="${ins.usuario.userName}">Juan</span>
                                 </span>
+                                <div th:if="${ins.usuario.nivelEducativo != null}" style="font-size:0.72rem;color:var(--text-muted);margin-top:2px;">
+                                    <i class="fas fa-graduation-cap"></i> <span th:text="${ins.usuario.nivelEducativo}"></span>
+                                </div>
+                                <div th:if="${ins.usuario.direccion != null}" style="font-size:0.72rem;color:var(--text-muted);">
+                                    <i class="fas fa-map-marker-alt"></i> <span th:text="${ins.usuario.direccion}"></span>
+                                </div>
                             </td>
                             <td>
                                 <span class="badge-conv-sm" th:text="${ins.convocatoria.titulo}">Beca X</span>

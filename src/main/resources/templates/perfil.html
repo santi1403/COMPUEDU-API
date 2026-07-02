@@ -96,6 +96,30 @@
             </div>
         </div>
 
+        <div class="field-group">
+            <label class="field-label">Direccion</label>
+            <div class="input-wrapper">
+                <i class="fas fa-map-marker-alt input-icon"></i>
+                <input type="text" th:field="*{direccion}" class="input-modern" placeholder="Direccion de residencia">
+            </div>
+        </div>
+
+        <div class="field-group">
+            <label class="field-label">Nivel Educativo</label>
+            <div class="input-wrapper">
+                <i class="fas fa-graduation-cap input-icon"></i>
+                <select th:field="*{nivelEducativo}" class="input-modern" style="appearance:none;-webkit-appearance:none;padding-right:2.5rem;cursor:pointer;background-image:none;">
+                    <option value="">Seleccionar...</option>
+                    <option value="Bachiller">Bachiller</option>
+                    <option value="Tecnico">Tecnico</option>
+                    <option value="Tecnologo">Tecnologo</option>
+                    <option value="Profesional">Profesional</option>
+                    <option value="Posgrado">Posgrado</option>
+                </select>
+                <i class="fas fa-chevron-down" style="position:absolute;right:0.9rem;top:50%;transform:translateY(-50%);color:#9ca3af;font-size:0.7rem;pointer-events:none;"></i>
+            </div>
+        </div>
+
         <div class="form-actions">
             <a th:href="@{/dashboard}" class="btn-cancel">
                 <i class="fas fa-times"></i> Cancelar
