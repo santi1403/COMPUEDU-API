@@ -89,6 +89,12 @@ public class InstitucionController {
                 // (Asegúrate de haber agregado findByCreador en tu repositorio como vimos antes)
                 model.addAttribute("convocatorias", convocatoriaRepo.findByCreador(institucion));
                 model.addAttribute("nombreUsuario", institucion.getUserName());
+
+                Map<Long, Long> inscritosPorConv = new HashMap<>();
+                for (Convocatoria c : convocatoriaRepo.findByCreador(institucion)) {
+                    inscritosPorConv.put(c.getId(), inscripcionRepo.countByConvocatoria(c));
+                }
+                model.addAttribute("inscritosPorConv", inscritosPorConv);
                 
                 // Busca el archivo en templates/institucion/mis_convocatorias.html
                 return "institucion/mis_convocatorias";

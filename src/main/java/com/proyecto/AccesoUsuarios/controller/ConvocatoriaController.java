@@ -168,13 +168,18 @@ public class ConvocatoriaController {
                 .collect(Collectors.toList());
 
         Map<Long, String> inscripcionesEstados = new HashMap<>();
+        Map<Long, Long> cuposOcupados = new HashMap<>();
         for (Inscripcion ins : misInscripciones) {
             inscripcionesEstados.put(ins.getConvocatoria().getId(), ins.getEstado());
+        }
+        for (Convocatoria c : convocatorias) {
+            cuposOcupados.put(c.getId(), inscripcionRepo.countByConvocatoria(c));
         }
 
         model.addAttribute("convocatorias", convocatorias);
         model.addAttribute("inscripcionesIds", inscripcionesIds);
         model.addAttribute("inscripcionesEstados", inscripcionesEstados);
+        model.addAttribute("cuposOcupados", cuposOcupados);
 
         return "convocatorias/lista_usuario";
     }

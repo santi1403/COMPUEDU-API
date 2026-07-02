@@ -162,6 +162,9 @@
                     <div th:if="${conv.precioSemestre != null and !conv.precioSemestre.isEmpty()}" style="font-size:0.76rem;color:var(--text-muted);margin-bottom:0.4rem;">
                         <i class="fas fa-tag me-1"></i> <span th:text="${conv.precioSemestre}"></span> / semestre
                     </div>
+                    <div style="font-size:0.76rem;color:var(--text-muted);margin-bottom:0.4rem;">
+                        <i class="fas fa-users me-1"></i> <b th:text="${inscritosPorConv[conv.id]}">0</b> inscritos / <span th:text="${conv.cupos}">35</span> cupos
+                    </div>
 
                     <span th:if="${conv.estado == 'ACTIVA'}" class="badge-status badge-active">
                         <i class="fas fa-check-circle"></i> Publicada
