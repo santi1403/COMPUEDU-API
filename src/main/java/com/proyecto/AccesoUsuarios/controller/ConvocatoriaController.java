@@ -180,6 +180,7 @@ public class ConvocatoriaController {
         model.addAttribute("inscripcionesIds", inscripcionesIds);
         model.addAttribute("inscripcionesEstados", inscripcionesEstados);
         model.addAttribute("cuposOcupados", cuposOcupados);
+        model.addAttribute("hoy", java.time.LocalDate.now());
 
         return "convocatorias/lista_usuario";
     }
@@ -198,6 +199,16 @@ public class ConvocatoriaController {
             long inscritos = inscripcionRepo.countByConvocatoria(conv);
             if (inscritos >= conv.getCupos()) {
                 redirectAttrs.addFlashAttribute("error", "Lo sentimos, los cupos para esta convocatoria ya estan llenos.");
+                return "redirect:/convocatorias/disponibles";
+            }
+
+            java.time.LocalDate hoy = java.time.LocalDate.now();
+            if (hoy.isBefore(conv.getFechaInicio())) {
+                redirectAttrs.addFlashAttribute("error", "Esta convocatoria aun no esta abierta. Inicia el " + conv.getFechaInicio() + ".");
+                return "redirect:/convocatorias/disponibles";
+            }
+            if (hoy.isAfter(conv.getFechaFin())) {
+                redirectAttrs.addFlashAttribute("error", "Esta convocatoria ya cerro. La fecha limite fue " + conv.getFechaFin() + ".");
                 return "redirect:/convocatorias/disponibles";
             }
 

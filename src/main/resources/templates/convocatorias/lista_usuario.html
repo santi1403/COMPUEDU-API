@@ -753,7 +753,7 @@
                                     <p class="tl-text" th:text="${#temporals.format(conv.fechaFin, 'dd MMMM yyyy')}"></p>
                             </div>
                         </div>
-                        <div class="modal-footer border-0" th:unless="${inscripcionesIds.contains(conv.id)}" style="flex-direction:column;align-items:stretch;">
+                        <div class="modal-footer border-0" th:unless="${inscripcionesIds.contains(conv.id) or hoy.isAfter(conv.fechaFin)}" style="flex-direction:column;align-items:stretch;">
                             <form th:action="@{/convocatorias/inscribirse/{id}(id=${conv.id})}" method="post" enctype="multipart/form-data">
                                 <div style="text-align:left;margin-bottom:0.8rem;">
                                     <label style="font-size:0.78rem;font-weight:600;color:var(--text-muted);display:block;margin-bottom:0.3rem;">
