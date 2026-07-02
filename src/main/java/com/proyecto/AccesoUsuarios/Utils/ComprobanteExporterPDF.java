@@ -70,11 +70,18 @@ public class ComprobanteExporterPDF {
 
         agregarSeccion(tabla, "DATOS DEL ESTUDIANTE", fSubtitulo, grisOscuro);
         agregarFila(tabla, "Nombre:", inscripcion.getUsuario().getUserName(), fNegrita, fNormal);
+        agregarFila(tabla, "Cedula:", inscripcion.getUsuario().getCedula() != null ? inscripcion.getUsuario().getCedula() : "N/A", fNegrita, fNormal);
         agregarFila(tabla, "Correo:", inscripcion.getUsuario().getEmail() != null ? inscripcion.getUsuario().getEmail() : "N/A", fNegrita, fNormal);
+        agregarFila(tabla, "Telefono:", inscripcion.getUsuario().getTelefono() != null ? inscripcion.getUsuario().getTelefono() : "N/A", fNegrita, fNormal);
         agregarFila(tabla, "ID Registro:", String.valueOf(inscripcion.getId()), fNegrita, fNormal);
+        agregarFila(tabla, "Estado:", inscripcion.getEstado(), fNegrita, fNormal);
 
         agregarSeccion(tabla, "CONVOCATORIA", fSubtitulo, grisOscuro);
         agregarFila(tabla, "Titulo:", inscripcion.getConvocatoria().getTitulo(), fNegrita, fNormal);
+        agregarFila(tabla, "Categoria:", inscripcion.getConvocatoria().getCategoria() != null ? inscripcion.getConvocatoria().getCategoria() : "N/A", fNegrita, fNormal);
+        String area = inscripcion.getConvocatoria().getAreaConocimiento() != null ? inscripcion.getConvocatoria().getAreaConocimiento() : "N/A";
+        agregarFila(tabla, "Area:", area, fNegrita, fNormal);
+        agregarFila(tabla, "Cupos totales:", String.valueOf(inscripcion.getConvocatoria().getCupos()), fNegrita, fNormal);
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
         agregarFila(tabla, "Fecha Registro:", inscripcion.getFechaInscripcion().format(fmt), fNegrita, fNormal);
 
@@ -83,7 +90,13 @@ public class ComprobanteExporterPDF {
             String nombreInst = creador.getNombreInstitucion() != null ? creador.getNombreInstitucion() : creador.getUserName();
             agregarFila(tabla, "Institucion:", nombreInst, fNegrita, fNormal);
             if (creador.getNit() != null) agregarFila(tabla, "NIT:", creador.getNit(), fNegrita, fNormal);
+            if (creador.getDescripcionInstitucion() != null) agregarFila(tabla, "Descripcion:", creador.getDescripcionInstitucion(), fNegrita, fNormal);
         }
+
+        String docs = "";
+        if (inscripcion.getPdfIcfes() != null) docs += "ICFES: " + inscripcion.getPdfIcfes() + " | ";
+        if (inscripcion.getPdfIdentidad() != null) docs += "Identidad: " + inscripcion.getPdfIdentidad();
+        if (!docs.isEmpty()) agregarFila(tabla, "Documentos:", docs, fNegrita, fNormal);
 
         documento.add(tabla);
 

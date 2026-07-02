@@ -45,14 +45,15 @@ public class HojaVidaExporterPDF {
         sub.setSpacingAfter(18);
         doc.add(sub);
 
-        PdfPTable table = new PdfPTable(5);
+        PdfPTable table = new PdfPTable(6);
         table.setWidthPercentage(100);
         table.setSpacingBefore(8);
-        float[] widths = {2.5f, 1.8f, 1.2f, 1.2f, 1.5f};
+        float[] widths = {2.2f, 1.5f, 1f, 1f, 1.2f, 1f};
         table.setWidths(widths);
 
         addHeader(table, "Convocatoria", fSec, gris);
         addHeader(table, "Institucion", fSec, gris);
+        addHeader(table, "Categoria", fSec, gris);
         addHeader(table, "Fecha", fSec, gris);
         addHeader(table, "Estado", fSec, gris);
         addHeader(table, "Folio", fSec, gris);
@@ -66,6 +67,7 @@ public class HojaVidaExporterPDF {
 
             addCell(table, ins.getConvocatoria().getTitulo(), fN);
             addCell(table, inst, fN);
+            addCell(table, ins.getConvocatoria().getCategoria() != null ? ins.getConvocatoria().getCategoria() : "N/A", fN);
             addCell(table, ins.getFechaInscripcion().format(fmt), fN);
             addCell(table, ins.getEstado(), fN);
             addCell(table, "#" + ins.getId(), fN);
