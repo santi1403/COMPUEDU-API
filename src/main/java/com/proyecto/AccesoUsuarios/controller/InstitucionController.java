@@ -67,40 +67,21 @@ public class InstitucionController {
             model.addAttribute("chartAceptadas", aceptadas);
             model.addAttribute("chartRechazadas", rechazadas);
 
-            // Alertas locales: convocatorias que cierran en 7 dias o cerraron hace 7 dias
+            // Alertas: convocatorias que cierran en 7 dias o cerraron ayer
             java.time.LocalDate hoy = java.time.LocalDate.now();
             java.time.LocalDate limite = hoy.plusDays(7);
-            java.time.LocalDate desde = hoy.minusDays(7);
-            model.addAttribute("alertasCierre", convocatoriaRepo.findProximasACerrar(institucion, limite));
             model.addAttribute("hoy", hoy);
+            model.addAttribute("alertasCierre", convocatoriaRepo.findProximasACerrar(institucion, limite));
 
-            // Verificar si alguna convocatoria cerro hoy o ayer y crear notificacion
-            List<Convocatoria> todas = convocatoriaRepo.findByCreador(institucion);
-            List<String> alertasHoy = new ArrayList<>();
-            for (Convocatoria c : todas) {
-                if (c.getFechaFin() != null && (c.getFechaFin().equals(hoy) || c.getFechaFin().equals(hoy.minusDays(1)))) {
-                    alertasHoy.add(c.getTitulo() + " cerro el " + c.getFechaFin());
-                    // Crear notificacion para la institucion si no existe ya
-                    Notificacion noti = new Notificacion();
-                    noti.setMensaje("Tu convocatoria '" + c.getTitulo() + "' cerro el " + c.getFechaFin());
-                    noti.setUsuario(institucion);
-                    noti.setConvocatoria(c);
-                    notificacionRepo.save(noti);
-
-                    // Notificar a estudiantes inscritos en esa convocatoria
-                    List<Inscripcion> inscritos = inscripcionRepo.findByConvocatoria_Creador(institucion);
-                    for (Inscripcion ins : inscritos) {
-                        if (ins.getConvocatoria().getId().equals(c.getId())) {
-                            Notificacion notiEst = new Notificacion();
-                            notiEst.setMensaje("La convocatoria '" + c.getTitulo() + "' ha cerrado. Tu postulacion esta siendo revisada.");
-                            notiEst.setUsuario(ins.getUsuario());
-                            notiEst.setConvocatoria(c);
-                            notificacionRepo.save(notiEst);
-                        }
-                    }
+            // Convocatorias que cerraron ayer para mostrarlas como "finalizadas"
+            java.time.LocalDate ayer = hoy.minusDays(1);
+            List<Convocatoria> cerradasAyer = new ArrayList<>();
+            for (Convocatoria c : convocatoriaRepo.findByCreador(institucion)) {
+                if (c.getFechaFin() != null && c.getFechaFin().equals(ayer)) {
+                    cerradasAyer.add(c);
                 }
             }
-            model.addAttribute("alertasHoy", alertasHoy);
+            model.addAttribute("cerradasAyer", cerradasAyer);
 
             System.out.println("========== DASHBOARD END ==========");
 

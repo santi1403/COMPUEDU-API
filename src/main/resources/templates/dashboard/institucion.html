@@ -169,19 +169,19 @@
                     <h5><i class="fas fa-bolt me-2" style="color:var(--accent);"></i>Alertas de Cierre</h5>
                 </div>
                 <div class="card-body-clean">
-                    <div th:if="${!alertasHoy.empty}">
-                        <div th:each="msg : ${alertasHoy}" class="alert-card" style="border-left:3px solid #dc2626;">
-                            <div class="alert-title" style="color:#dc2626;" th:text="${msg}"></div>
-                            <span class="badge-days" style="background:rgba(220,38,38,0.1);color:#dc2626;">Cerrada</span>
+                    <div th:if="${!cerradasAyer.empty}">
+                        <div th:each="conv : ${cerradasAyer}" class="alert-card" style="border-left:3px solid #dc2626;">
+                            <div class="alert-title" style="color:#dc2626;" th:text="${conv.titulo}">Beca</div>
+                            <span class="badge-days" style="background:rgba(220,38,38,0.1);color:#dc2626;">Se cerro el <span th:text="${#temporals.format(conv.fechaFin, 'dd MMM yyyy')}"></span></span>
                         </div>
                     </div>
                     <div th:if="${!alertasCierre.empty}">
                         <div th:each="conv : ${alertasCierre}" class="alert-card">
                             <div class="alert-title" th:text="${conv.titulo}">Beca</div>
-                            <span class="badge-days">Cierra: <span th:text="${#temporals.format(conv.fechaFin, 'dd MMM yyyy')}"></span></span>
+                            <span class="badge-days">Inicio: <span th:text="${#temporals.format(conv.fechaInicio, 'dd MMM')}"></span> — Cierra: <span th:text="${#temporals.format(conv.fechaFin, 'dd MMM yyyy')}"></span></span>
                         </div>
                     </div>
-                    <div th:if="${alertasCierre.empty and alertasHoy.empty}" class="text-center py-3 text-muted" style="font-size:0.85rem;">
+                    <div th:if="${alertasCierre.empty and cerradasAyer.empty}" class="text-center py-3 text-muted" style="font-size:0.85rem;">
                         <i class="fas fa-check-circle me-1" style="color:var(--primary);"></i> No hay alertas de cierre pendientes.
                     </div>
                 </div>
